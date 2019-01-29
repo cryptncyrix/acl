@@ -1,0 +1,20 @@
+{
+    "name": "cyrixbiz/acl",
+	"description": "An Access Control List for Laravel without Gates",
+    "authors": [
+        {
+            "name": "Christian Kupka",
+            "email": "admin@cyrix.biz"
+        }
+    ],
+    "require": {},
+	"autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+            "psr-4": {
+                "cyrixbiz\\acl\\": "src/"
+            }
+        }
+}
