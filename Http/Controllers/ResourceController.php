@@ -1,7 +1,7 @@
 <?php
 namespace cyrixbiz\acl\controller;
 
-class RoleController
+class ResourceController
 {
 
     /*
@@ -28,7 +28,7 @@ class RoleController
     public function index()
     {
         //dd($this->getAllPermissions());
-       // dd(hasResource('home'));
+        // dd(hasResource('home'));
     }
 
     /*
