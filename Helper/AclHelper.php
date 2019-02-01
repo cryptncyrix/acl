@@ -107,7 +107,7 @@ class AclHelper {
      */
     public function hasResource($toCheckedString)
     {
-        if(config('acl.acl.superadmin') == $this->user->id)
+        if(isset($this->user->id) && config('acl.acl.superadmin') == $this->user->id)
         {
             return true;
         }
