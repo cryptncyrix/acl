@@ -1,5 +1,4 @@
-# acl
-An Access Control List for Laravel
+# An Access Control List for Laravel
 
 > Give user individual rights and roles
 
