@@ -3,6 +3,10 @@
 use cyrixbiz\acl\Models\Resource;
 use Illuminate\Contracts\Auth\Guard;
 
+/**
+ * Class AclHelper
+ * @package cyrixbiz\acl\Helper
+ */
 class AclHelper {
 
     /**
@@ -107,8 +111,20 @@ class AclHelper {
      */
     public function hasResource($toCheckedString)
     {
-        if(isset($this->user->id) && config('acl.acl.superadmin') == $this->user->id)
+        if(isset($this->user->id) && config('acl.acl.superAdmin') == $this->user->id)
         {
+            return true;
+        }
+
+        if(is_array($toCheckedString))
+        {
+            foreach ($toCheckedString as $value)
+            {
+                if(!in_array($value, $this->resources))
+                {
+                    return false;
+                }
+            }
             return true;
         }
         return (in_array($toCheckedString, $this->resources));

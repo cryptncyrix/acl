@@ -1,6 +1,10 @@
 <?php namespace cyrixbiz\acl\Models;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Role
+ * @package cyrixbiz\acl\Models
+ */
 class Role extends Model {
     /**
      * The database table used by the model.
@@ -29,7 +33,7 @@ class Role extends Model {
      */
     public function resources()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\Resource', 'roles_resources');
+        return $this->belongsToMany(config('acl.model.resources'), 'roles_resources');
 
     }
 
@@ -40,7 +44,7 @@ class Role extends Model {
      */
     public function users()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\User', 'users_roles');
+        return $this->belongsToMany(config('auth.providers.users.model'), 'users_roles');
 
     }
 }

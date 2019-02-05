@@ -3,6 +3,10 @@
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 
+/**
+ * Class Acl
+ * @package cyrixbiz\acl\Middleware
+ */
 class Acl {
 
     /**

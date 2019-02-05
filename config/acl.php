@@ -2,6 +2,15 @@
 
 return [
 
+    'model' => [
+        'roles'     => 'cyrixbiz\acl\Models\Role',
+        'resources' => 'cyrixbiz\acl\Models\Resource',
+
+        // Don' Change this Line
+        'users'     => config('auth.providers.users.model'), // use from auth Config File
+
+    ],
+
     /**
      * Check the Route
      */
@@ -33,7 +42,7 @@ return [
          * Default: 1 | Change this to
          */
 
-        'superAdmin' => 1
+        'superAdmin' => 2
     ],
 
     /**

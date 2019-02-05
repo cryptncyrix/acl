@@ -2,6 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Resource
+ * @package cyrixbiz\acl\Models
+ */
 class Resource extends Model {
 
     /**
@@ -35,7 +39,7 @@ class Resource extends Model {
      */
     public function roles()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\Role', 'roles_resources');
+        return $this->belongsToMany(config('acl.model.roles'), 'roles_resources');
 
     }
 
@@ -46,7 +50,7 @@ class Resource extends Model {
      */
     public function users()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\User', 'users_resources');
+        return $this->belongsToMany(config('auth.providers.users.model'), 'users_resources');
 
     }
 }

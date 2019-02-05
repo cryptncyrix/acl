@@ -4,6 +4,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Class User
+ * @package cyrixbiz\acl\Models\Models
+ */
 class User extends Authenticatable
 {
     use Notifiable;

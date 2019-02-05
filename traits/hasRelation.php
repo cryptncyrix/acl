@@ -1,6 +1,10 @@
 <?php
 namespace cyrixbiz\acl\traits;
 
+/**
+ * Trait hasRelation
+ * @package cyrixbiz\acl\traits
+ */
 trait hasRelation
 {
     /**
@@ -10,7 +14,7 @@ trait hasRelation
      */
     public function resources()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\Resource', 'users_resources');
+        return $this->belongsToMany(config('acl.model.resources'), 'users_resources');
 
     }
 
@@ -21,6 +25,6 @@ trait hasRelation
      */
     public function roles()
     {
-        return $this->belongsToMany('\cyrixbiz\acl\Models\Role', 'users_roles');
+        return $this->belongsToMany(config('acl.model.roles'), 'users_roles');
     }
 }

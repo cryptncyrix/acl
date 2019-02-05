@@ -1,10 +1,18 @@
 <?php
 namespace cyrixbiz\acl;
 use cyrixbiz\acl\Helper\AclHelper;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class AclServiceProvider
+ * @package cyrixbiz\acl
+ */
 class AclServiceProvider extends ServiceProvider {
 
+    /**
+     *
+     */
     public function boot()
     {
         include_once __DIR__.'/Helper/helpers.php';
@@ -22,11 +30,19 @@ class AclServiceProvider extends ServiceProvider {
          */
         $this->loadMigrationsFrom(__DIR__.'/Database/migrations');
 
+        /*
+         * Load Blade Extensions
+         */
+        $this->setBladeVariables();
+
         $this->publishes([
             __DIR__ . '/config/acl.php' => config_path('acl.php'),
         ]);
     }
 
+    /**
+     *
+     */
     public function register()
     {
         // Load Config File
@@ -43,6 +59,51 @@ class AclServiceProvider extends ServiceProvider {
                 $app['Illuminate\Contracts\Auth\Guard']
             );
         });
+    }
+
+    public function setBladeVariables()
+    {
+
+        Blade::if('perm', function ($item)
+        {
+            return hasResource($item);
+        });
+
+
+        Blade::if('perms', function (array $items)
+        {
+            return hasResource($items);
+        });
+
+
+        /*
+         *
+        Blade::directive('startResource', function (string $checkItem) {
+            return "<?php if (hasResource({$checkItem})): ?>";
+        });
+        Blade::directive('endResource', function () {
+            return "<?php endif; ?>";
+        });
+
+
+        Blade::directive('startResources', function ($checkItem) {
+            $checkItem = explode(',', $checkItem);
+            $items = "<?php if (";
+            foreach ($checkItem as $value)
+            {
+                $items .= "hasResource({$value}) && ";
+            }
+            $items = substr($items, 0 , -3);
+            $items .= "): ?>";
+
+            return $items;
+        });
+        Blade::directive('endResources', function () {
+            return "<?php endif; ?>";
+        });
+
+        */
+
     }
 }
 ?>
