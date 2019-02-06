@@ -15,7 +15,7 @@
         {{ session('status') }}
     </div>
 @endif
-<h3>Acl Overview</h3>
+<h3>Overview</h3>
 <div class='table-responsive'>
     <table id="role" class="table table-striped table-hover table-bordered" cellspacing="0" width="100%">
         <caption class="text-center"> Übersicht </caption>
