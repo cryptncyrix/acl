@@ -1,0 +1,45 @@
+{
+    "name": "cyrixbiz/acl",
+	"description": "An Access Control List for Laravel without Gates",
+    "authors": [
+        {
+            "name": "Christian Kupka",
+            "email": "admin@cyrix.biz",
+            "homepage": "http://www.cyrix.biz",
+            "role": "Developer",
+            "keywords": [
+                "auth",
+                "permissions",
+                "roles",
+                "security",
+                "acl",
+                "middleware"
+            ],
+            "license": "MIT"
+        }
+    ],
+    "require": {
+        "php": ">= 7.1"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "psr-4": {
+            "cyrixbiz\\acl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "cyrixbiz\\acl\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "cyrixbiz\\acl\\AclServiceProvider"
+            ]
+        }
+    }
+}
