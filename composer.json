@@ -21,15 +21,20 @@
     "require": {
         "php": ">= 7.1"
     },
-	"autoload": {
+    "autoload": {
         "classmap": [
             "database/seeds",
             "database/factories"
         ],
-            "psr-4": {
-                "cyrixbiz\\acl\\": "src/"
-            }
-        },
+        "psr-4": {
+            "cyrixbiz\\acl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "cyrixbiz\\acl\\": "src/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
