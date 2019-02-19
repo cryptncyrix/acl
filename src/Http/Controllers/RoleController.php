@@ -1,9 +1,9 @@
-<?php
-namespace cyrixbiz\acl\controller;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Http\Controllers;
 
-use cyrixbiz\acl\traits\bindModel;
-use Illuminate\Container\Container;
-use Illuminate\Http\Request;
+use cyrixbiz\acl\Http\Requests\Role\RoleRequest;
+use cyrixbiz\acl\Http\Requests\Role\RoleUpdateRequest;
+use cyrixbiz\acl\Repositories\Role\RoleRepository;
 
 /**
  * Class RoleController
@@ -11,9 +11,8 @@ use Illuminate\Http\Request;
  */
 class RoleController
 {
-    use bindModel;
 
-    protected $model, $action;
+    protected $repository, $action;
 
     /*
     |--------------------------------------------------------------------------
@@ -27,9 +26,9 @@ class RoleController
      * @param Container $app
      */
 
-    public function __construct(Container $app)
+    public function __construct(RoleRepository $repository)
     {
-        $this->model = $this->bindModel(config('acl.model.roles'), $app);
+        $this->repository = $repository;
         $this->action = strtolower(substr(config('acl.model.roles'), strripos(config('acl.model.roles'), '\\') + 1));
 
     }
@@ -44,7 +43,7 @@ class RoleController
      */
     public function index()
     {
-        return view('Acl::roleresource\Overview', ['model' => $this->model->all(), 'action' => $this->action, 'link' => ['resource']]);
+        return view('Acl::roleresource\Overview', ['model' => $this->repository->all(), 'action' => $this->action, 'link' => ['resource']]);
     }
 
     /**
@@ -63,17 +62,10 @@ class RoleController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
 
-        $request->validate([
-            'name' => 'required|unique:roles|max:191',
-            'default_access' => 'required|boolean',
-            'info' => 'required|max:191'
-        ]);
-
-        $this->model->create($request->input());
-
+        $this->repository->create($request->validated());
         return redirect()->route('role.index');
     }
 
@@ -85,7 +77,7 @@ class RoleController
 
     public function show(int $id)
     {
-        return view('Acl::roleresource\Show', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::roleresource\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -96,7 +88,7 @@ class RoleController
 
     public function edit(int $id)
     {
-        return view('Acl::roleresource\Edit', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::roleresource\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -105,16 +97,9 @@ class RoleController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(Request $request)
+    public function update(RoleUpdateRequest $request)
     {
-        $request->validate([
-            'name' => 'sometimes|required|unique:roles,id,' . $request->get('id') . '|max:191',
-            'default_access' => 'required|boolean',
-            'info' => 'required|max:191'
-        ]);
-
-        $this->model->where('id', '=', $request->get('id'))->first()->update($request->input());
-
+        $this->repository->update($request->validated(), (int) $request->validated()['id']);
         return redirect()->route('role.index');
 
 
@@ -128,7 +113,7 @@ class RoleController
 
     public function destroy(int $id)
     {
-        $this->model->where('id', '=', $id)->delete($id);
+        $this->repository->delete($id);
         return redirect()->route('role.index');
     }
 

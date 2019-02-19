@@ -1,9 +1,9 @@
-<?php
-namespace cyrixbiz\acl\controller;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Http\Controllers;
 
-use cyrixbiz\acl\traits\bindModel;
-use Illuminate\Container\Container;
-use Illuminate\Http\Request;
+use cyrixbiz\acl\Http\Requests\Resource\ResourceRequest;
+use cyrixbiz\acl\Http\Requests\Resource\ResourceUpdateRequest;
+use cyrixbiz\acl\Repositories\Resource\ResourceRepository;
 
 /**
  * Class ResourceController
@@ -11,9 +11,11 @@ use Illuminate\Http\Request;
  */
 class ResourceController
 {
-    use bindModel;
 
-    protected $model;
+    /**
+     * @var ResourceRepository
+     */
+    protected $repository;
 
     /*
     |--------------------------------------------------------------------------
@@ -27,9 +29,9 @@ class ResourceController
      * @param Container $app
      */
 
-    public function __construct(Container $app)
+    public function __construct(ResourceRepository $repository)
     {
-        $this->model = $this->bindModel(config('acl.model.resources'), $app);
+        $this->repository = $repository;
         $this->action = strtolower(substr(config('acl.model.resources'), strripos(config('acl.model.resources'), '\\') + 1));
     }
 
@@ -42,7 +44,7 @@ class ResourceController
      */
     public function index()
     {
-        return view('Acl::roleresource\Overview', ['model' => $this->model->all(), 'action' => $this->action]);
+        return view('Acl::roleresource\Overview', ['model' => $this->repository->all(), 'action' => $this->action]);
     }
 
     /**
@@ -57,21 +59,14 @@ class ResourceController
 
     /**
      * Store the Resource to Database
-     * @param Request $request
+     * @param ResourceRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(Request $request)
+    public function store(ResourceRequest $request)
     {
 
-        $request->validate([
-            'name' => 'required|unique:resources|max:191',
-            'default_access' => 'required|boolean',
-            'info' => 'required|max:191'
-        ]);
-
-        $this->model->create($request->input());
-
+        $this->repository->create($request->validated());
         return redirect()->route('resource.index');
     }
 
@@ -83,7 +78,7 @@ class ResourceController
 
     public function show(int $id)
     {
-        return view('Acl::roleresource\Show', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::roleresource\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -94,7 +89,7 @@ class ResourceController
 
     public function edit(int $id)
     {
-        return view('Acl::roleresource\Edit', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::roleresource\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -103,17 +98,9 @@ class ResourceController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(Request $request)
+    public function update(ResourceUpdateRequest $request)
     {
-        $request->validate([
-            'id'    => 'required|integer',
-            'name' => 'sometimes|required|unique:resources,id,' . $request->get('id') . '|max:191',
-            'default_access' => 'required|boolean',
-            'info' => 'required|max:191'
-        ]);
-
-        $this->model->where('id', '=', $request->get('id'))->first()->update($request->input());
-
+        $this->repository->update($request->validated(), (int) $request->validated()['id']);
         return redirect()->route('resource.index');
 
 
@@ -127,7 +114,7 @@ class ResourceController
 
     public function destroy(int $id)
     {
-        $this->model->where('id', '=', $id)->delete($id);
+        $this->repository->delete($id);
         return redirect()->route('resource.index');
     }
 

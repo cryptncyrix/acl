@@ -1,5 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace cyrixbiz\acl\traits;
+
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Trait hasRelation
@@ -7,6 +9,14 @@ namespace cyrixbiz\acl\traits;
  */
 trait hasRelation
 {
+
+    /**
+     * @param $password
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = Hash::make($password);
+    }
     /**
      * @param void
      *

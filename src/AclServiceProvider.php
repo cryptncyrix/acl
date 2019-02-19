@@ -75,35 +75,6 @@ class AclServiceProvider extends ServiceProvider {
             return hasResource($items);
         });
 
-
-        /*
-         *
-        Blade::directive('startResource', function (string $checkItem) {
-            return "<?php if (hasResource({$checkItem})): ?>";
-        });
-        Blade::directive('endResource', function () {
-            return "<?php endif; ?>";
-        });
-
-
-        Blade::directive('startResources', function ($checkItem) {
-            $checkItem = explode(',', $checkItem);
-            $items = "<?php if (";
-            foreach ($checkItem as $value)
-            {
-                $items .= "hasResource({$value}) && ";
-            }
-            $items = substr($items, 0 , -3);
-            $items .= "): ?>";
-
-            return $items;
-        });
-        Blade::directive('endResources', function () {
-            return "<?php endif; ?>";
-        });
-
-        */
-
     }
 }
 ?>

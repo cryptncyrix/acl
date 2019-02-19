@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace cyrixbiz\acl\traits;
 
+use cyrixbiz\acl\Exceptions\AclException;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,12 +17,12 @@ trait bindModel
      * @return Model|mixed
      * @throws \Exception
      */
-    public function bindModel($stringModel, Container $app)
+    public function bindModel(string $stringModel, Container $app)
     {
         $model = $app->make($stringModel);
         if(!$model instanceof Model)
         {
-            throw new \Exception("Class {$stringModel} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+            throw new AclException("Class {$stringModel} must be an instance of Illuminate\\Database\\Eloquent\\Model");
 
         }
         return $this->model = $model;

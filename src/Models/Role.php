@@ -1,4 +1,5 @@
-<?php namespace cyrixbiz\acl\Models;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**

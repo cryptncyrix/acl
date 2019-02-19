@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * hasResource
@@ -10,7 +10,12 @@
  */
 function hasResource($name)
 {
-    return app('aclhelper')->hasResource($name);
+
+    if(is_array($name) || is_string($name))
+    {
+        return app('aclhelper')->hasResource($name);
+    }
+    throw new \cyrixbiz\acl\Exceptions\Acl\AclException('Only String or Array');
 }
 
 /**
@@ -18,7 +23,7 @@ function hasResource($name)
  * @param bool $field
  * @return null|string
  */
-function showError($error, $field = false)
+function showError(array $error, $field = false)
 {
     if (count($error) > 0) {
         if($field && !$error->has($field)) {

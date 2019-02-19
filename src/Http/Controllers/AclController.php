@@ -1,7 +1,11 @@
-<?php
-namespace cyrixbiz\acl\controller;
-use cyrixbiz\acl\traits\bindModel;
-use Illuminate\Container\Container;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Http\Controllers;
+
+use cyrixbiz\acl\Exceptions\Acl\AclException;
+use cyrixbiz\acl\Http\Requests\Acl\AclRequest;
+use cyrixbiz\acl\Repositories\Resource\ResourceRepository;
+use cyrixbiz\acl\Repositories\Role\RoleRepository;
+use cyrixbiz\acl\Repositories\User\UserRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -10,7 +14,20 @@ use Illuminate\Http\Request;
  */
 class AclController
 {
-    use bindModel;
+    protected
+        $roleRepository,
+        $resourceRepository,
+        $userRepository;
+
+
+    /**
+     * @var array
+     */
+    protected $valid = [
+        'resource.role',
+        'resource.user',
+        'role.user'
+    ];
     /*
     |--------------------------------------------------------------------------
     | Acl Controller
@@ -23,11 +40,12 @@ class AclController
      * @param Container $app
      */
 
-    public function __construct(Container $app)
+    public function __construct(RoleRepository $roleRepository, ResourceRepository $resourceRepository, UserRepository $userRepository)
     {
-        $this->roleModel = $this->bindModel(config('acl.model.roles'), $app);
-        $this->resourceModel   = $this->bindModel(config('acl.model.resources'), $app);
-        $this->userModel =  $this->bindModel(config('auth.providers.users.model'), $app);
+            $this->roleRepository        = $roleRepository;
+            $this->resourceRepository    = $resourceRepository;
+            $this->userRepository        = $userRepository;
+
     }
 
     /**
@@ -43,11 +61,14 @@ class AclController
     public function getPermissions(string $from, string $to, int $id)
     {
         $permission = [];
-        $fromModel = $this->{$from.'Model'}->all();
-        $toModel = $this->{$to.'Model'}->all();
+        $fromModel = $this->{$from.'Repository'}->all();
+        $toModel = $this->{$to.'Repository'}->all();
 
-        if(hasResource($from. '.' . $to))
+        if(!in_array($from. '.' . $to , $this->valid) || !hasResource($from. '.' . $to))
         {
+            abort(404);
+        }
+
             foreach ($fromModel as $valueFrom)
             {
                 $permission[$valueFrom->id] = [0 => false, 1 => $valueFrom->name];
@@ -63,11 +84,11 @@ class AclController
             }
 
             return view('Acl::acl/getresource',
-                ['from' => $this->{$to.'Model'}->find($id), // User -> ForExample Cyrix
+                ['from' => $this->{$to.'Repository'}->find($id), // User -> ForExample Cyrix
                     'to'    => $permission, // All Roles ( Example )
                     'action' => $to.'.'.$from,
                     'id' => $id]);
-        }
+
 
 
     }
@@ -77,23 +98,24 @@ class AclController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function setPermissions(Request $request)
+    public function setPermissions(AclRequest $request)
     {
-        $input  = $request->except('_id', '_token');
+
+        $input  = $request->validated();
         $explodedAction = explode('.', $input['action']);
         if(hasResource($explodedAction[1].'.'.$explodedAction[0]))
         {
             $attach = $detach = [];
-            foreach($input as $key => $value)
+            foreach($input['new'] as $key => $value)
             {
-                if(!is_int($key))
+                if(!array_key_exists($key, $input['old']))
                 {
-                    continue;
+                    throw new AclException('Param not in Old Array - FormError');
                 }
 
                 if($value == true)
                 {
-                    if($input['old_' . $key] == 0)
+                    if($input['old'][$key] == 0)
                     {
                         $attach[] = $key;
                     }
@@ -108,15 +130,15 @@ class AclController
 
             if($attach != [])
             {
-                $this->{$explodedAction[0].'Model'}->find($request->get('_id'))->{$explodedAction[1].'s'}()->attach($attach);
+                $this->{$explodedAction[0].'Repository'}->attach($attach, $explodedAction[1].'s', (int) $input['_id']);
 
             }
             if($detach != [])
             {
-                $this->{$explodedAction[0].'Model'}->find($request->get('_id'))->{$explodedAction[1].'s'}()->detach($detach);
+                $this->{$explodedAction[0].'Repository'}->detach($detach, $explodedAction[1].'s', (int) $input['_id']);
             }
 
-            return redirect()->route('acl.getPermissions', [$explodedAction[1], $explodedAction[0], $request->get('_id')]);
+            return redirect()->route('acl.getPermissions', [$explodedAction[1], $explodedAction[0], $input['_id']]);
         }
         abort('401');
     }

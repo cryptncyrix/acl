@@ -7,58 +7,63 @@
 ### Install the ACL
 
 * Composer
-```php
-composer .....
-```
+    ```php
+    composer require cyrixbiz/acl
+    ```
 
 * Edit config\app and add the following lines
-
-```php
-  'providers' => [
-    // ...
-    cyrixbiz\acl\AclServiceProvider::class,
-    // ...
-  ];
-```
+    
+    ```php
+      'providers' => [
+        // ...
+        cyrixbiz\acl\AclServiceProvider::class,
+        // ...
+      ];
+    ```
 
 * Edit App\Http\Kernel and add the following lines
 
-```php
-    protected $middlewareGroups = [
-	  //
-    'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
-            ],
-```
+    ```php
+        protected $middlewareGroups = [
+          //
+        'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
+                ],
+    ```
 
 *  Got to your User Model - Default Value: App\User.php and set this
-
-```php
-    //after namespace .....
-    use cyrixbiz\acl\traits\hasRelation;
     
-    //after Notifiable
-    //for Example: use Notifiable, hasRelation;
-    
-    , hasRelation;
-```
+    ```php
+        //after namespace .....
+        use cyrixbiz\acl\traits\hasRelation;
+        
+        //after Notifiable
+        //for Example: use Notifiable, hasRelation;
+        
+        , hasRelation;
+    ```
 
 * Migrate the Database
 
-```php
-php artisan migrate
-```
+    ```php
+    php artisan migrate
+    ```
 
 * Set the Default Values
 
-```php
-php artisan db:seed --class=\cyrixbiz\acl\seeds\AclRoleSeeder
-```
+    ```php
+    php artisan db:seed --class=\cyrixbiz\acl\seeds\AclRoleSeeder
+    ```
 
-* Optional - Publish Config
+* Optional 
+    - App\Providers into Boot-Method
+    ```php
+    php artisan db:seed --class=\cyrixbiz\acl\seeds\AclRoleSeeder
+    ```
 
-```php
-php artisan vendor:publish
-```
+    - Publish Config
+    ```php
+    php artisan vendor:publish
+    ```
 
 ### Config - File
 

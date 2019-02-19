@@ -33,7 +33,7 @@ return [
          * Default: 1 | Change this to
          */
 
-        'superAdmin' => 2
+        'superAdmin' => 1
     ],
 
     /**

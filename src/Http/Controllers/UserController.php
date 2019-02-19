@@ -1,8 +1,9 @@
-<?php
-namespace cyrixbiz\acl\controller;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Http\Controllers;
 
-use cyrixbiz\acl\traits\bindModel;
-use Illuminate\Container\Container;
+use cyrixbiz\acl\Http\Requests\User\UserRequest;
+use cyrixbiz\acl\Http\Requests\User\UserUpdateRequest;
+use cyrixbiz\acl\Repositories\User\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,9 +13,7 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserController
 {
-    use bindModel;
-
-    protected $model;
+    protected $repository;
 
     /*
     |--------------------------------------------------------------------------
@@ -28,9 +27,9 @@ class UserController
      * @param Container $app
      */
 
-    public function __construct(Container $app)
+    public function __construct(UserRepository $repository)
     {
-        $this->model = $this->bindModel(config('acl.model.users'), $app);
+        $this->repository = $repository;
         $this->action = strtolower(substr(config('acl.model.users'), strripos(config('acl.model.users'), '\\') + 1));
     }
 
@@ -44,7 +43,7 @@ class UserController
      */
     public function index()
     {
-        return view('Acl::user\Overview', ['model' => $this->model->all(), 'action' => $this->action, 'link' => ['role', 'resource']]);
+        return view('Acl::user\Overview', ['model' => $this->repository->all(), 'action' => $this->action, 'link' => ['role', 'resource']]);
     }
 
     /**
@@ -63,22 +62,10 @@ class UserController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
 
-        $request->validate([
-            'name' => 'required|string|unique:users|max:191',
-            'email' => 'required|string|email|unique:users|max:191',
-            'password' => 'required|min:8',
-            'info' => 'required|max:191'
-        ]);
-
-        $this->model->create([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-            'info' => $request->get('info')
-        ]);
+        $this->repository->create($request->validated());
 
         return redirect()->route('user.index');
     }
@@ -91,7 +78,7 @@ class UserController
 
     public function show(int $id)
     {
-        return view('Acl::user\Show', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::user\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -102,7 +89,7 @@ class UserController
 
     public function edit(int $id)
     {
-        return view('Acl::user\Edit', ['model' => $this->model->find($id), 'action' => $this->action]);
+        return view('Acl::user\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -111,27 +98,9 @@ class UserController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(Request $request)
+    public function update(UserUpdateRequest $request)
     {
-        $validate = $request->validate([
-            'id' => 'required|integer',
-            'name' => 'required|string|unique:users,id,' . $request->get('id') . '|max:191',
-            'email' => 'required|string|email|unique:users,id,' . $request->get('id') . '|max:191',
-            'password' => 'max:191',
-            'info' => 'required|max:191'
-        ]);
-
-
-        if(isset($validate['password']))
-        {
-            $validate['password'] = Hash::make($validate['password']);
-        }
-        else
-        {
-            unset($validate['password']);
-        }
-
-        $this->model->where('id', '=', $request->get('id'))->first()->update($validate);
+        $this->repository->update($request->validated(), (int) $request->validated()['id']);
 
         return redirect()->route('user.index');
 
@@ -148,9 +117,9 @@ class UserController
     {
         if($id == config('acl.acl.superAdmin'))
         {
-            return redirect()->route('user.index')->with('error', 'You can\' delete this Person');
+            return redirect()->route('user.index')->with('error', 'You can\' delete this Person. This Person has SuperAdmin-Rights');
         }
-        $this->model->where('id', '=', $id)->delete($id);
+        $this->repository->delete($id);
         return redirect()->route('user.index');
     }
 

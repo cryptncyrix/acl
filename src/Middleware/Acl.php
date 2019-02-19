@@ -1,7 +1,10 @@
-<?php namespace cyrixbiz\acl\Middleware;
+<?php declare(strict_types=1);
+namespace cyrixbiz\acl\Middleware;
 
 use Closure;
+use cyrixbiz\acl\Exceptions\Acl\AclException;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 
 /**
  * Class Acl
@@ -26,7 +29,7 @@ class Acl {
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         //dd($this->splitAction($request));
         //dd(strrchr($request->route()->getAction()['controller'], '\\'));
@@ -37,23 +40,9 @@ class Acl {
             {
                 return $next($request);
             }
-            return ($request->ajax()) ? response('Unauthorized.', 401) : abort(401) /*response()->view('errors.401', [], 401)*/;
+            return ($request->ajax()) ? response('Unauthorized.', 401) : abort(401);
         }
         return $next($request);
-    }
-
-    /**
-     * Split the Controller-Action to dotString
-     *
-     * @param $request
-     * @return string
-     */
-
-    private function splitAction($request)
-    {
-        $action = substr(strrchr($request->route()->getAction()['controller'], '\\') , 1);
-        $name = strtolower(stristr($action , 'Controller', true) . '.' . substr(stristr($action , '@'), 1));
-        return $name;
     }
 
     /**
@@ -62,7 +51,7 @@ class Acl {
      * @param $request
      * @return string
      */
-    private function checkMethod($request)
+    private function checkMethod(Request $request)
     {
         if(config('acl.acl.method') == 'name')
         {
@@ -76,6 +65,39 @@ class Acl {
         {
             abort( 404 );
         }
+    }
+
+    /**
+     * Split the Controller-Action to dotString
+     *
+     * @param $request
+     * @return string
+     */
+
+    private function splitAction(Request $request)
+    {
+
+        if(strpos($request->route()->getActionName(), '@'))
+        {
+            $action = substr(strrchr($request->route()->getActionName(), '\\') , 1);
+            return strtolower(stristr($action , 'Controller', true) . '.' . substr(stristr($action , '@'), 1));
+        }
+
+        return $this->fallback($request);
+    }
+
+    /**
+     * @param $request
+     * @return mixed
+     * @throws AclException
+     */
+    private function fallback($request)
+    {
+        if(is_null($request->route()->getName()))
+        {
+            throw new AclException('Middleware - Error | Use for  {{' . $request->route()->getActionName() . '}} the Name - method  f.Example: ->name("foobar")');
+        }
+        return $request->route()->getName();
     }
 
 }
