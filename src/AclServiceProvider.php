@@ -1,6 +1,6 @@
 <?php
 namespace cyrixbiz\acl;
-use cyrixbiz\acl\Helper\AclHelper;
+use cyrixbiz\acl\Services\AclService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,7 +24,13 @@ class AclServiceProvider extends ServiceProvider {
         /*
          * Load the Views from the Package
          */
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'Acl');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'AclView');
+
+        /*
+         * Load the Translation from the Package
+         */
+        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'AclLang');
+
         /*
          * Load the Migrations from the Package
          */
@@ -35,6 +41,9 @@ class AclServiceProvider extends ServiceProvider {
          */
         $this->setBladeVariables();
 
+        /*
+         * Publish Config
+         */
         $this->publishes([
             __DIR__ . '/config/acl.php' => config_path('acl.php'),
         ]);
@@ -51,16 +60,18 @@ class AclServiceProvider extends ServiceProvider {
             __DIR__ . '/config/acl.php' , 'acl'
         );
 
-        $this->app->singleton('aclhelper', function($app)
+        $this->app->singleton('aclservice', function($app)
         {
-            return new AclHelper(
-                $app['cyrixbiz\acl\Models\Resource'],
-                //$app['App\Database\Repositories\ResourceRepository'],
+            return new AclService(
+                $app['cyrixbiz\acl\Repositories\Resource\ResourceRepository'],
                 $app['Illuminate\Contracts\Auth\Guard']
             );
         });
     }
 
+    /**
+     *
+     */
     public function setBladeVariables()
     {
 

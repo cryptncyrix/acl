@@ -2,9 +2,15 @@
 namespace cyrixbiz\acl\Middleware;
 
 use Closure;
+
 use cyrixbiz\acl\Exceptions\Acl\AclException;
+use cyrixbiz\acl\Exceptions\Acl\AclMethodException;
+use cyrixbiz\acl\Exceptions\Acl\AclMiddlewareException;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Acl
@@ -31,73 +37,77 @@ class Acl {
      */
     public function handle(Request $request, Closure $next)
     {
-        //dd($this->splitAction($request));
-        //dd(strrchr($request->route()->getAction()['controller'], '\\'));
 
         if(config('acl.acl.enable') === true)
         {
-            if ( hasResource($this->checkMethod($request)) )
+            if(Auth::guest())
+            {
+                return response()->view('AclView::errors/401', [], 401);
+            }
+            if (hasResource($this->checkMethod($request)) )
             {
                 return $next($request);
             }
-            return ($request->ajax()) ? response('Unauthorized.', 401) : abort(401);
+
+            throw AclException::permissen_denied();
+            //return ($request->ajax()) ? response('Unauthorized.', 401) : redirect()->route('login');
         }
         return $next($request);
+
     }
 
     /**
-     * Use name or action method
+     * Use getName or getActionName method
      *
      * @param $request
      * @return string
      */
-    private function checkMethod(Request $request)
+    private function checkMethod(Request $request) : ?string
     {
-        if(config('acl.acl.method') == 'name')
+        foreach (config('acl.acl.method') as $value)
         {
-            return $request->route()->getName();
+            throw_unless(method_exists($request->route(), $value), new AclMethodException($value));
+
+            $item = $this->{$value}($request);
+            if(is_null($item))
+            {
+                continue;
+            }
+
+            return $item;
         }
-        elseif (config('acl.acl.method') == 'action')
-        {
-            return $this->splitAction($request);
-        }
-        else
-        {
-            abort( 404 );
-        }
+        throw new AclMiddlewareException($request->route()->getActionName());
+
     }
 
     /**
-     * Split the Controller-Action to dotString
-     *
-     * @param $request
-     * @return string
+     * @param Request $request
+     * @return bool|string
+     */
+    private function getName(Request $request) : ?string
+    {
+        if(is_null($request->route()->getName()))
+        {
+            return null;
+        }
+        return $request->route()->getName();
+    }
+
+    /**
+     * @param Request $request
+     * @return bool|string
      */
 
-    private function splitAction(Request $request)
+    private function getActionName(Request $request) : ?string
     {
 
         if(strpos($request->route()->getActionName(), '@'))
         {
             $action = substr(strrchr($request->route()->getActionName(), '\\') , 1);
-            return strtolower(stristr($action , 'Controller', true) . '.' . substr(stristr($action , '@'), 1));
+            return strtolower(stristr($action , 'Controller', true)) . '.' . substr(stristr($action , '@'), 1);
         }
 
-        return $this->fallback($request);
-    }
-
-    /**
-     * @param $request
-     * @return mixed
-     * @throws AclException
-     */
-    private function fallback($request)
-    {
-        if(is_null($request->route()->getName()))
-        {
-            throw new AclException('Middleware - Error | Use for  {{' . $request->route()->getActionName() . '}} the Name - method  f.Example: ->name("foobar")');
-        }
-        return $request->route()->getName();
+        return null;
     }
 
 }

@@ -1,4 +1,4 @@
-@extends('Acl::layout/layout')
+@extends('AclView::layout/layout')
 @section('content')
 
     @if(session('status'))
@@ -9,8 +9,8 @@
 
     <div class="col-sm-8 offset-md-2 py-2 text-center form">
 
-        <p> Name: {{ auth()->user()->name  }}</p>
-        <p> Rollen:
+        <p>{{ __('AclLang::views.name') }}: {{ auth()->user()->name  }}</p>
+        <p>{{ __('AclLang::views.roles') }}:
         @if(config('acl.acl.superAdmin') == auth()->user()->id)
             < superAdmin >
         @endif
@@ -18,12 +18,10 @@
          {{ '< '.$value['name'].' >' }}
         @endforeach
         </p>
-        <p> Rechte:
+        <p>{{ __('AclLang::views.permissions') }}:
             @foreach(auth()->user()->resources as $value)
                 {{ '< '.$value['name'].' >' }}
             @endforeach
         </p>
     </div>
-    </body>
-    </html>
 @endsection

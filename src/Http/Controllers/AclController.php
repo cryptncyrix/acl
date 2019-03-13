@@ -2,11 +2,14 @@
 namespace cyrixbiz\acl\Http\Controllers;
 
 use cyrixbiz\acl\Exceptions\Acl\AclException;
+use cyrixbiz\acl\Exceptions\Acl\AclFormException;
 use cyrixbiz\acl\Http\Requests\Acl\AclRequest;
 use cyrixbiz\acl\Repositories\Resource\ResourceRepository;
 use cyrixbiz\acl\Repositories\Role\RoleRepository;
 use cyrixbiz\acl\Repositories\User\UserRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class AclController
@@ -58,12 +61,11 @@ class AclController
      * @param int $id // id for param $to
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getPermissions(string $from, string $to, int $id)
+    public function getPermissions(string $from, string $to, int $id) : View
     {
         $permission = [];
         $fromModel = $this->{$from.'Repository'}->all();
         $toModel = $this->{$to.'Repository'}->all();
-
         if(!in_array($from. '.' . $to , $this->valid) || !hasResource($from. '.' . $to))
         {
             abort(404);
@@ -83,13 +85,11 @@ class AclController
                 }
             }
 
-            return view('Acl::acl/getresource',
+            return view('AclView::acl/getresource',
                 ['from' => $this->{$to.'Repository'}->find($id), // User -> ForExample Cyrix
                     'to'    => $permission, // All Roles ( Example )
                     'action' => $to.'.'.$from,
                     'id' => $id]);
-
-
 
     }
 
@@ -98,48 +98,86 @@ class AclController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function setPermissions(AclRequest $request)
+    public function setPermissions(AclRequest $request) : RedirectResponse
     {
 
         $input  = $request->validated();
         $explodedAction = explode('.', $input['action']);
+
         if(hasResource($explodedAction[1].'.'.$explodedAction[0]))
         {
-            $attach = $detach = [];
-            foreach($input['new'] as $key => $value)
-            {
-                if(!array_key_exists($key, $input['old']))
-                {
-                    throw new AclException('Param not in Old Array - FormError');
-                }
+            if(!$this->checkBlockedRole($input['new'], (int)$input['_id'], $explodedAction[1].'.'.$explodedAction[0])) {
 
-                if($value == true)
-                {
-                    if($input['old'][$key] == 0)
-                    {
-                        $attach[] = $key;
+                $attach = $detach = [];
+                foreach ($input['new'] as $key => $value) {
+                    if (!array_key_exists($key, $input['old'])) {
+                        throw new AclFormException();
                     }
-                    continue;
+
+                    if ($value == true) {
+                        if ($input['old'][$key] == 0) {
+                            $attach[] = $key;
+                        }
+                        continue;
+                    } else {
+                        $detach[] = $key;
+                    }
+
                 }
-                else
-                {
-                    $detach[] = $key;
+
+                if ($attach != []) {
+                    $this->{$explodedAction[0] . 'Repository'}->attach($attach, $explodedAction[1] . 's', (int)$input['_id']);
+
                 }
-
+                if ($detach != []) {
+                    $this->{$explodedAction[0] . 'Repository'}->detach($detach, $explodedAction[1] . 's', (int)$input['_id']);
+                }
             }
-
-            if($attach != [])
+            else
             {
-                $this->{$explodedAction[0].'Repository'}->attach($attach, $explodedAction[1].'s', (int) $input['_id']);
-
-            }
-            if($detach != [])
-            {
-                $this->{$explodedAction[0].'Repository'}->detach($detach, $explodedAction[1].'s', (int) $input['_id']);
+                $this->setBlockedRole((int)$input['_id']);
             }
 
             return redirect()->route('acl.getPermissions', [$explodedAction[1], $explodedAction[0], $input['_id']]);
         }
         abort('401');
+    }
+
+    /**
+     * @param array $roles
+     * @param int $userId
+     * @param string $resource
+     * @return bool
+     */
+    protected function checkBlockedRole(array $roles, int $userId, string $resource) : bool
+    {
+        if(in_array($resource, $this->valid) || !hasResource($resource))
+        {
+            if(config('acl.acl.superAdmin') == $userId)
+            {
+                throw AclException::superAdmin();
+
+            } else {
+
+                if(array_key_exists(config('acl.acl.blockedRole'), $roles))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        abort(404);
+    }
+
+    /**
+     * @param int $userId
+     * @return bool
+     */
+    protected function setBlockedRole(int $userId) : bool
+    {
+        $this->userRepository->detach([], 'resources',  $userId);
+        $this->userRepository->detach([], 'roles',  $userId);
+        $this->userRepository->attach([config('acl.acl.blockedRole')], 'roles',  $userId);
+        return true;
     }
 }

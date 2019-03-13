@@ -17,15 +17,6 @@ return [
         'enable' => true,
 
         /**
-         * Use RouteName or RouteAction
-         *
-         * Default: action
-         * Alternative: name|action
-         */
-
-        'method' => 'action',
-
-        /**
          * UserId with Full Rights
          *
          * This User is a special User
@@ -33,22 +24,45 @@ return [
          * Default: 1 | Change this to
          */
 
-        'superAdmin' => 1
+        'superAdmin' => 11,
+
+        /**
+         * All Member in this Role don't have Rights
+         *
+         * This Group is a special Role
+         * He has zero Rights, He can't be deleted.
+         * Users in this Role, lost all her Permissions
+         * Default: 5 | Change this to your Role
+         */
+
+        'blockedRole' => 14,
+
+        /**
+         * Use RouteName or RouteAction
+         *
+         * Default: getActionName
+         * Alternative: getName|getActionName
+         */
+
+        'method' => [
+            'active'   => 'getActionName',
+            'fallback' => 'getName'
+        ],
+
     ],
 
     /**
-     * Not Implemented
-     *
+     * Cache
      */
     'cache' => [
 
         /**
-         * Set Cache Time in minutes
+         * Set Cache Time in Seconds
          *
-         * Default: 10
+         * Default: 60
          */
 
-        'time' => 10
+        'time' => 60
     ],
 
     'model' => [

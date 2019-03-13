@@ -5,7 +5,9 @@ namespace cyrixbiz\acl\Eloquent;
 use cyrixbiz\acl\Contracts\Repository\RepositoryInterface;
 use cyrixbiz\acl\Exceptions\Repository\RepositoryException;
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class Repository
@@ -40,10 +42,10 @@ abstract class Repository implements RepositoryInterface     {
     abstract function model();
 
     /**
-     * @return Model|mixed
+     * @return Model
      * @throws RepositoryException
      */
-    public function bind()
+    public function bind() : Model
     {
         $model = $this->app->make($this->model());
         if(!$model instanceof Model)
@@ -57,9 +59,9 @@ abstract class Repository implements RepositoryInterface     {
     /**
      * @param array $columns
      * @param null $with
-     * @return mixed
+     * @return Collection
      */
-    public function all($columns = ['*'], $with = null)
+    public function all($columns = ['*'], $with = null) : Collection
     {
         if(is_null($with))
         {
@@ -71,18 +73,19 @@ abstract class Repository implements RepositoryInterface     {
     /**
      * @param int $perPage
      * @param array $columns
-     * @return mixed
+     * @return LengthAwarePaginator
      */
-    public function paginate($perPage = 25, $columns = ['*'])
+    public function paginate($perPage = 25, $columns = ['*']) : LengthAwarePaginator
     {
         return $this->model->paginate($perPage, $columns);
     }
 
     /**
      * @param array $data
-     * @return mixed
+     * @return Model
      */
-    public function create(array $data) {
+    public function create(array $data) : Model
+    {
         return $this->model->create($data);
     }
 
@@ -90,18 +93,21 @@ abstract class Repository implements RepositoryInterface     {
      * @param array $data
      * @param int $id
      * @param string $attribute
-     * @return mixed
+     * @return bool
      */
-    public function update(array $data, int $id, $attribute = "id") {
+    public function update(array $data, int $id, $attribute = "id")  : Bool
+    {
         return $this->model->where($attribute, '=', $id)->first()->update($data);
     }
 
     /**
      * @param $id
      * @param array $where
-     * @return mixed
+     * @return int
      */
-    public function delete($id, $where = []) {
+    public function delete($id, $where = [])  : int
+    {
+
         if(!empty($where))
         {
             return $this->model
@@ -116,9 +122,10 @@ abstract class Repository implements RepositoryInterface     {
      * @param $id
      * @param array $columns
      * @param null $with
-     * @return mixed
+     * @return Model
      */
-    public function find($id, $columns = ['*'], $with = null) {
+    public function find($id, $columns = ['*'], $with = null)  : Model
+    {
         if(is_null($with))
         {
             return $this->model->find($id, $columns);
@@ -132,9 +139,10 @@ abstract class Repository implements RepositoryInterface     {
      * @param $value
      * @param array $columns
      * @param null $with
-     * @return mixed
+     * @return Model
      */
-    public function findBy($attribute, $value, $columns = ['*'], $with = null) {
+    public function findBy($attribute, $value, $columns = ['*'], $with = null)  : Model
+    {
         if(is_null($with))
         {
             return $this->model->where($attribute, '=', $value)->first($columns);
@@ -147,9 +155,9 @@ abstract class Repository implements RepositoryInterface     {
      * @param array $data
      * @param $table
      * @param int $id
-     * @return mixed
+     * @return int|null
      */
-    public function attach(array $data, $table, $id = 0)
+    public function attach(array $data, $table, $id = 0) : ?int
     {
         return $this->model->find($id)->{$table}()->attach($data);
     }
@@ -158,10 +166,14 @@ abstract class Repository implements RepositoryInterface     {
      * @param array $data
      * @param $table
      * @param int $id
-     * @return mixed
+     * @return int|null
      */
-    public function detach(array $data, $table, $id = 0)
+    public function detach(array $data, $table, $id = 0) : ?int
     {
+        if(empty($data))
+        {
+            return $this->model->find($id)->{$table}()->detach();
+        }
         return $this->model->find($id)->{$table}()->detach($data);
     }
 }

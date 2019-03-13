@@ -17,6 +17,8 @@ trait hasRelation
     {
         $this->attributes['password'] = Hash::make($password);
     }
+
+
     /**
      * @param void
      *

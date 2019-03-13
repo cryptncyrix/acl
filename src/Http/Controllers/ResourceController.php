@@ -4,6 +4,8 @@ namespace cyrixbiz\acl\Http\Controllers;
 use cyrixbiz\acl\Http\Requests\Resource\ResourceRequest;
 use cyrixbiz\acl\Http\Requests\Resource\ResourceUpdateRequest;
 use cyrixbiz\acl\Repositories\Resource\ResourceRepository;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * Class ResourceController
@@ -42,9 +44,9 @@ class ResourceController
      * @param void
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index() : View
     {
-        return view('Acl::roleresource\Overview', ['model' => $this->repository->all(), 'action' => $this->action]);
+        return view('AclView::roleresource\Overview', ['repository' => $this->repository->all(), 'action' => $this->action]);
     }
 
     /**
@@ -52,9 +54,9 @@ class ResourceController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function create()
+    public function create() : View
     {
-        return view('Acl::roleresource\Create', ['action' => $this->action]);
+        return view('AclView::roleresource\Create', ['action' => $this->action]);
     }
 
     /**
@@ -63,7 +65,7 @@ class ResourceController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(ResourceRequest $request)
+    public function store(ResourceRequest $request) : RedirectResponse
     {
 
         $this->repository->create($request->validated());
@@ -76,9 +78,9 @@ class ResourceController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function show(int $id)
+    public function show(int $id) : View
     {
-        return view('Acl::roleresource\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::roleresource\Show', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -87,9 +89,9 @@ class ResourceController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function edit(int $id)
+    public function edit(int $id) : View
     {
-        return view('Acl::roleresource\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::roleresource\Edit', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -98,7 +100,7 @@ class ResourceController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(ResourceUpdateRequest $request)
+    public function update(ResourceUpdateRequest $request) : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
         return redirect()->route('resource.index');
@@ -112,7 +114,7 @@ class ResourceController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function destroy(int $id)
+    public function destroy(int $id) : RedirectResponse
     {
         $this->repository->delete($id);
         return redirect()->route('resource.index');

@@ -4,6 +4,8 @@ namespace cyrixbiz\acl\Http\Controllers;
 use cyrixbiz\acl\Http\Requests\Role\RoleRequest;
 use cyrixbiz\acl\Http\Requests\Role\RoleUpdateRequest;
 use cyrixbiz\acl\Repositories\Role\RoleRepository;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * Class RoleController
@@ -41,9 +43,9 @@ class RoleController
      * @param void
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index() : View
     {
-        return view('Acl::roleresource\Overview', ['model' => $this->repository->all(), 'action' => $this->action, 'link' => ['resource']]);
+        return view('AclView::roleresource\Overview', ['repository' => $this->repository->all(), 'action' => $this->action, 'link' => ['resource']]);
     }
 
     /**
@@ -51,9 +53,9 @@ class RoleController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function create()
+    public function create() : View
     {
-        return view('Acl::roleresource\create', ['action' => $this->action]);
+        return view('AclView::roleresource\create', ['action' => $this->action]);
     }
 
     /**
@@ -62,7 +64,7 @@ class RoleController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(RoleRequest $request)
+    public function store(RoleRequest $request) : RedirectResponse
     {
 
         $this->repository->create($request->validated());
@@ -75,9 +77,9 @@ class RoleController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function show(int $id)
+    public function show(int $id) : View
     {
-        return view('Acl::roleresource\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::roleresource\Show', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -86,9 +88,9 @@ class RoleController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function edit(int $id)
+    public function edit(int $id) : View
     {
-        return view('Acl::roleresource\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::roleresource\Edit', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -97,7 +99,7 @@ class RoleController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(RoleUpdateRequest $request)
+    public function update(RoleUpdateRequest $request)  : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
         return redirect()->route('role.index');
@@ -111,9 +113,14 @@ class RoleController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function destroy(int $id)
+    public function destroy(int $id) : RedirectResponse
     {
-        $this->repository->delete($id);
+        if($id != config('acl.acl.blockedRole'))
+        {
+            return redirect()->route('role.index')->with('error', 'You can\' delete this Role. This Role is a System-Role.');
+
+        }
+        $this->repository->delete($id, []);
         return redirect()->route('role.index');
     }
 

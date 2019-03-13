@@ -3,7 +3,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>Access Controll List</title>
+<title>{{ __('AclLang::views.title') }}</title>
 
 <!-- Bootstrap core CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -37,7 +37,7 @@
         background: -moz-radial-gradient( #ffffff, #f2dede);
         background: -o-radial-gradient( #ffffff, #f2dede);
         background: radial-gradient(#ffffff, #f2dede);
-        max-width: 360px;
+        max-width: 540px;
         margin: 100px auto 100px;
         padding: 45px;
         text-align: center;
@@ -49,7 +49,7 @@
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     }
 
-    .form input {
+    .form input[type="text"], input[type="email"], input[type="password"] {
         outline: 0;
         background: #c1c1c1;
         width: 100%;
@@ -58,6 +58,11 @@
         padding: 15px;
         box-sizing: border-box;
         font-size: 14px;
+        text-align: center;
+    }
+
+    .form input[type="radio"] {
+        margin: 15px 15px 15px 15px;
     }
 
     .form input[type="submit"] {
@@ -72,6 +77,7 @@
         -webkit-transition: all 0.3 ease;
         transition: all 0.3 ease;
         cursor: pointer;
+        margin-top: 15px;
     }
 
     .form input[type="submit"]:hover,.form input[type="submit"]:active,.form input[type="submit"]:focus {
@@ -81,6 +87,10 @@
 
     p {
         color:#2fa360
+    }
+
+    h1, h2, h3, h4, h5, h6{
+        color: #c1c1c1;
     }
 </style>
 

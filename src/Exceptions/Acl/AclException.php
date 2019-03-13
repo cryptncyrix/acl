@@ -1,13 +1,34 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Exceptions\Acl;
 
-use Exception;
-use Illuminate\Support\Facades\Log;
 
-class AclException extends Exception
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
+/**
+ * Class AclException
+ * @package cyrixbiz\acl\Exceptions\Acl
+ */
+class AclException extends HttpException
 {
-    public function report()
+
+    /**
+     * @return AclException
+     */
+    public static function unauthorized() : self
     {
-        Log::debug('AclException' );
+        return new static(403, __('AclLang::exception.unauthorized'), null, []);
+    }
+
+    /**
+     * @return AclException
+     */
+    public static function permissen_denied() : self
+    {
+        return new static(403, __('AclLang::exception.permissen_denied'), null, []);
+    }
+
+    public static function superAdmin() :self
+    {
+        return new static(403, __('AclLang::exception.superAdmin'), null, []);
     }
 }

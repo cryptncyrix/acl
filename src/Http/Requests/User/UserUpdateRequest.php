@@ -12,7 +12,7 @@ class UserUpdateRequest extends FormRequest {
      *
      * @return array
      */
-    public function rules()
+    public function rules() : array
     {
         return [
             'id' => 'required|integer',
@@ -28,7 +28,7 @@ class UserUpdateRequest extends FormRequest {
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() : bool
     {
         return true;
     }

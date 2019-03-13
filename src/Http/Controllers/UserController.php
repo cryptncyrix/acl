@@ -4,8 +4,10 @@ namespace cyrixbiz\acl\Http\Controllers;
 use cyrixbiz\acl\Http\Requests\User\UserRequest;
 use cyrixbiz\acl\Http\Requests\User\UserUpdateRequest;
 use cyrixbiz\acl\Repositories\User\UserRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 /**
  * Class UserController
@@ -41,9 +43,9 @@ class UserController
      * @param void
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index() : View
     {
-        return view('Acl::user\Overview', ['model' => $this->repository->all(), 'action' => $this->action, 'link' => ['role', 'resource']]);
+        return view('AclView::user\Overview', ['repository' => $this->repository->all(), 'action' => $this->action, 'link' => ['role', 'resource']]);
     }
 
     /**
@@ -51,9 +53,9 @@ class UserController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function create()
+    public function create() : View
     {
-        return view('Acl::user\Create', ['action' => $this->action]);
+        return view('AclView::user\Create', ['action' => $this->action]);
     }
 
     /**
@@ -62,7 +64,7 @@ class UserController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request) : RedirectResponse
     {
 
         $this->repository->create($request->validated());
@@ -76,9 +78,9 @@ class UserController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function show(int $id)
+    public function show(int $id) : View
     {
-        return view('Acl::user\Show', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::user\Show', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -87,9 +89,9 @@ class UserController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
 
-    public function edit(int $id)
+    public function edit(int $id) : View
     {
-        return view('Acl::user\Edit', ['model' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::user\Edit', ['repository' => $this->repository->find($id), 'action' => $this->action]);
     }
 
     /**
@@ -98,7 +100,7 @@ class UserController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function update(UserUpdateRequest $request)
+    public function update(UserUpdateRequest $request) : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
 
@@ -113,7 +115,7 @@ class UserController
      * @return \Illuminate\Http\RedirectResponse
      */
 
-    public function destroy(int $id)
+    public function destroy(int $id) : RedirectResponse
     {
         if($id == config('acl.acl.superAdmin'))
         {

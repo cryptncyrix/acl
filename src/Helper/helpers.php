@@ -10,12 +10,8 @@
  */
 function hasResource($name)
 {
-
-    if(is_array($name) || is_string($name))
-    {
-        return app('aclhelper')->hasResource($name);
-    }
-    throw new \cyrixbiz\acl\Exceptions\Acl\AclException('Only String or Array');
+    throw_unless(is_array($name) || is_string($name), new \cyrixbiz\acl\Exceptions\Acl\AclHelperException($name));
+    return app('aclservice')->hasResource($name);
 }
 
 /**

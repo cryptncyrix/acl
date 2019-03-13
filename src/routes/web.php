@@ -1,20 +1,11 @@
 <?php
-Route::get('Acl', function(){
-    return view('Acl::Acl');
-});
-Route::post('Acl', function (){
-    return true;
-})->name('Acl');
-
-//Route::get('home', 'cyrixbiz\acl\controller\RoleController@index');
 Route::middleware(['web' , 'acl'])->group(function () {
 
+    Route::view('home', 'AclView::home/index')->name('home');
 
- //   Route::view('home', 'Acl::home/home');
-
-    Route::get('home', function (){
-       return view('Acl::home/index');
-    })->name('home');
+    //Route::get('home', function (){
+      // return view('Acl::home/index');
+    //});
 
     /*
      * Role Controller
@@ -52,7 +43,7 @@ Route::middleware(['web' , 'acl'])->group(function () {
     /*
      * Acl Controller
      */
-    Route::get('acl/getpermissions/{from}/{to}/{id}', 'cyrixbiz\acl\Http\Controllers\AclController@getPermissions')->name('acl.getPermissions');
-    Route::post('acl/setpermissions', 'cyrixbiz\acl\Http\Controllers\AclController@setPermissions')->name('acl.setPermissions');
+    Route::get('acl/getPermissions/{from}/{to}/{id}', 'cyrixbiz\acl\Http\Controllers\AclController@getPermissions')->name('acl.getPermissions');
+    Route::post('acl/setPermissions', 'cyrixbiz\acl\Http\Controllers\AclController@setPermissions')->name('acl.setPermissions');
 });
 

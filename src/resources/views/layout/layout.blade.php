@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('Acl::partials.head')
+    @include('AclView::partials.head')
 </head>
 
 <body>
 
-@include('Acl::partials.nav')
+@include('AclView::partials.nav')
 
 @yield('content')
 
-@include('Acl::partials.footer')
+@include('AclView::partials.footer')
 
-@include('Acl::partials.footer-scripts')
+@include('AclView::partials.footer-scripts')
 
 
 </body>
