@@ -47,6 +47,8 @@ class AclServiceProvider extends ServiceProvider {
         $this->publishes([
             __DIR__ . '/config/acl.php' => config_path('acl.php'),
         ]);
+
+        $this->commands([\cyrixbiz\acl\commands\AclCommand::class]);
     }
 
     /**

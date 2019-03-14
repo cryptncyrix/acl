@@ -22,10 +22,6 @@
         "php": ">= 7.1"
     },
     "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
         "psr-4": {
             "cyrixbiz\\acl\\": "src/"
         }

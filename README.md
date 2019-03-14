@@ -10,59 +10,58 @@
     ```php
     composer require cyrixbiz/acl
     ```
+    
 
 * Edit config\app and add the following lines
     
     ```php
-      'providers' => [
-        // ...
-        cyrixbiz\acl\AclServiceProvider::class,
-        // ...
-      ];
+  'providers' => [
+    // ...
+    cyrixbiz\acl\AclServiceProvider::class,
+    // ...
+  ];
+    ```
+    
+* Install
+
+    ```php
+    php artisan make:acl
     ```
 
 * Edit App\Http\Kernel and add the following lines
 
     ```php
-        protected $middlewareGroups = [
-          //
-        'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
-                ],
+    protected $middlewareGroups = [
+      //
+    'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
+            ],
     ```
 
 *  Got to your User Model - Default Value: App\User.php and set this
     
     ```php
-        //after namespace .....
-        use cyrixbiz\acl\traits\hasRelation;
-        
-        //after Notifiable
-        //for Example: use Notifiable, hasRelation;
-        
-        , hasRelation;
+    //after namespace .....
+    use cyrixbiz\acl\traits\hasRelation;
+    
+    //after Notifiable in Class
+    //for Example: use Notifiable, hasRelation;
+    
+    , hasRelation;
     ```
 
-* Migrate the Database
-
+* Error - Handling 
+    
+    > Exception: 
+    PDOException::("SQLSTATE[42000]: Syntax error or access violation: 1071 
+    Specified key was too long; max key length is 767 bytes")
+    
+    Fix this Issue:
+    - App\Providers
     ```php
-    php artisan migrate
-    ```
-
-* Set the Default Values
-
-    ```php
-    php artisan db:seed --class=\cyrixbiz\acl\seeds\AclRoleSeeder
-    ```
-
-* Optional 
-    - App\Providers into Boot-Method
-    ```php
-    php artisan db:seed --class=\cyrixbiz\acl\seeds\AclRoleSeeder
-    ```
-
-    - Publish Config
-    ```php
-    php artisan vendor:publish
+    // after namespace
+    use Illuminate\Support\Facades\Schema;
+    // Inside Boot-Method
+    Schema::defaultStringLength(191);
     ```
 
 ### Config - File
@@ -118,19 +117,20 @@ Route::middleware(['web' , 'acl'])
 > For Example: Single Check @perm @endperm
 
 ```html
-@perm($action.'.show')
-    <a class="btn btn-xs btn-warning" href="{{ route($action.'.show' , $value->id) }}"> <i class="fa fa-btn fa-edit"></i>Anzeigen</a>
+@perm('user.index')
+    <a class="btn btn-xs btn-warning" href="#">Anzeigen</a>
 @endperm
 ```
 
 > For Example: Multi Check @perms @endperms
 
 ```html
-@perm($action.'.show')
-    <a class="btn btn-xs btn-warning" href="{{ route($action.'.show' , $value->id) }}"> <i class="fa fa-btn fa-edit"></i>Anzeigen</a>
-@endperm
+@perms(['acl.getPermissions' , 'role.user'])
+<a class="btn btn-xs btn-success" href="#">Anker</a>
+@endperms
 ```
 
 ###### Requirements
 
 - <a href="http://laravel.com/docs/5.7">Laravel 5</a>
+- <a href="https://laravel.com/docs/5.7/authentication">Auth</a>
