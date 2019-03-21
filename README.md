@@ -21,6 +21,18 @@
     // ...
   ];
     ```
+
+*  Got to your User Model - Default Value: App\User.php and set this
+    
+    ```php
+    //after namespace .....
+    use cyrixbiz\acl\traits\hasRelation;
+    
+    //after Notifiable in Class
+    //for Example: use Notifiable, hasRelation;
+    
+    , hasRelation;
+    ```
     
 * Install
 
@@ -35,19 +47,7 @@
       //
     'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
             ],
-    ```
-
-*  Got to your User Model - Default Value: App\User.php and set this
-    
-    ```php
-    //after namespace .....
-    use cyrixbiz\acl\traits\hasRelation;
-    
-    //after Notifiable in Class
-    //for Example: use Notifiable, hasRelation;
-    
-    , hasRelation;
-    ```
+    ```    
 
 * Error - Handling 
     
@@ -130,7 +130,15 @@ Route::middleware(['web' , 'acl'])
 @endperms
 ```
 
+> For Example: Multi Check, One must true @orPerms @endorPerms
+
+```html
+@orPerms(['acl.getPermissions' , 'role.user'])
+<a class="btn btn-xs btn-success" href="#">Anker</a>
+@endorPerms
+```
+
 ###### Requirements
 
-- <a href="http://laravel.com/docs/5.7">Laravel 5</a>
+- <a href="http://laravel.com/docs/5.7">Laravel 5.7</a>
 - <a href="https://laravel.com/docs/5.7/authentication">Auth</a>

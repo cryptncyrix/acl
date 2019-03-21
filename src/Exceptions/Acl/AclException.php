@@ -27,6 +27,9 @@ class AclException extends HttpException
         return new static(403, __('AclLang::exception.permissen_denied'), null, []);
     }
 
+    /**
+     * @return AclException
+     */
     public static function superAdmin() :self
     {
         return new static(403, __('AclLang::exception.superAdmin'), null, []);

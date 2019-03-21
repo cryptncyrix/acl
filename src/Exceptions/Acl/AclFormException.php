@@ -16,8 +16,7 @@ class AclFormException extends Exception
     protected $message;
 
     /**
-     * AclHelperException constructor.
-     * @param string $method
+     * AclFormException constructor.
      */
     public function __construct()
     {

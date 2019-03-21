@@ -5,8 +5,15 @@ namespace cyrixbiz\acl\Repositories\Role;
 use cyrixbiz\acl\Eloquent\Repository;
 use cyrixbiz\acl\Exceptions\Acl\AclBlockedException;
 
+/**
+ * Class RoleRepository
+ * @package cyrixbiz\acl\Repositories\Role
+ */
 class RoleRepository extends Repository
 {
+    /**
+     * @return string
+     */
     public function model() : string
     {
         return config('acl.model.roles');

@@ -8,7 +8,7 @@ use Exception;
  * Class AclException
  * @package cyrixbiz\acl\Exceptions\Acl
  */
-class AclBlockedException extends Exception
+class AclSuperAdminException extends Exception
 {
     /**
      * @var array|null|string
@@ -16,10 +16,10 @@ class AclBlockedException extends Exception
     protected $message;
 
     /**
-     * AclBlockedException constructor.
+     * AclSuperAdminException constructor.
      */
     public function __construct()
     {
-        $this->message = __('AclLang::exception.role_blocked');
+        $this->message = __('AclLang::exception.superAdmin');
     }
 }

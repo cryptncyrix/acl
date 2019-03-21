@@ -119,7 +119,7 @@ class UserController
     {
         if($id == config('acl.acl.superAdmin'))
         {
-            return redirect()->route('user.index')->with('error', 'You can\' delete this Person. This Person has SuperAdmin-Rights');
+            return redirect()->route('user.index')->with('error', __('AclLang::exceptions.superAdmin'));
         }
         $this->repository->delete($id);
         return redirect()->route('user.index');

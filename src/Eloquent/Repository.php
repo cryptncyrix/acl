@@ -91,6 +91,15 @@ abstract class Repository implements RepositoryInterface     {
 
     /**
      * @param array $data
+     * @return Model
+     */
+    public function insert(array $data) : bool
+    {
+        return $this->model->insert($data);
+    }
+
+    /**
+     * @param array $data
      * @param int $id
      * @param string $attribute
      * @return bool

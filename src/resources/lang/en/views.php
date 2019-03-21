@@ -34,6 +34,7 @@ return
         'overview' => 'Overview',
         'description' => 'Descritption',
         'description_info' => 'Description - Max Length 191 Signs',
+        'description_default' => 'Insert here your Short-Description',
         'allow' => 'Allow',
         'disallowed' => 'Disallowed',
         'default_access' => 'Standard Recht',
@@ -47,7 +48,9 @@ return
         'users' => 'Users',
         'users_overview' => 'Overview Users',
         'users_create' => 'Create User',
-
+        'helper'  => 'Helper',
+        'set_routes' => 'Set Routes as Resources',
+        'routes_success' => 'Routes successfully set as resources. Please adjust the short description.',
 
         'home' => 'Home',
         'logout' => 'Logout',

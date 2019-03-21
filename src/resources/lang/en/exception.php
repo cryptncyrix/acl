@@ -11,7 +11,7 @@ return
         'unauthorized' => 'Login Required - Please Check your activity status',
         'permissen_denied' => 'This user doesn\'t have sufficient permissions.',
         'role_blocked' => 'This Role can\'t be deleted. It\'s a secure Role. Change the \'blockedRole\' in the Config-File.',
-        'superAdmin' => 'This Role can\'t be blocked. It\'s the superAdmin. Change the \'superAdmin\', in the Config-File.',
+        'superAdmin' => 'This User can\'t be deleted. It\'s the superAdmin. Change the \'superAdmin\', in the Config-File.',
         'form'  => 'FormError - Param not in Old Array',
         'error_authorized' => 'Login Required',
         'back_login' => 'Back to Login'

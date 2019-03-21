@@ -290,6 +290,15 @@ class AclSeeder extends Seeder
             ]);
         DB::table('resources')->updateOrInsert(
             [
+                'name' => 'acl.setRoutes',
+            ],
+            [
+                'name' => 'acl.setRoutes',
+                'default_access' => false,
+                'info' => 'Set Routes as Resources',
+            ]);
+        DB::table('resources')->updateOrInsert(
+            [
                 'name' => 'role.user',
             ],
             [

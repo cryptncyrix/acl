@@ -21,6 +21,15 @@ class Role extends Model {
     protected $fillable = ['name', 'default_access', 'info'];
 
     /**
+     * The default Attributes Values
+     * @var array
+     */
+    protected $attributes = [
+        'default_access' => 0,
+        'info' => 'Insert your Short Description'
+    ];
+
+    /**
      * Set Timestamps
      *
      * @var type

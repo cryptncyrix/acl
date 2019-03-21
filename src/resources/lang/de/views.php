@@ -32,6 +32,7 @@ return
     'overview' => 'Übersicht',
     'description' => 'Beschreibung',
     'description_info' => 'Beschreibung - Max Länge 191 Zeichen',
+    'description_default' => 'Hier bitte deine Kurzbeschreibung hinterlegen',
     'allow' => 'Erlauben',
     'disallowed' => 'Verbieten',
     'default_access' => 'Standard Recht',
@@ -45,6 +46,9 @@ return
     'users' => 'Benutzer',
     'users_overview' => 'Übersicht Benutzer',
     'users_create' => 'Erstelle Benutzer',
+    'helper'  => 'Helfer',
+    'set_routes' => 'Setze Routen als Berechtigungen',
+    'routes_success' => 'Routen wurde erfolgreich als Resourcen gesetzt. Bitte passe die Kurzbeschreibung an.',
 
 
     'home' => 'Startseite',

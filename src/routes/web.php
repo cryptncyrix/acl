@@ -4,7 +4,7 @@ Route::middleware(['web' , 'acl'])->group(function () {
     Route::view('home', 'AclView::home/index')->name('home');
 
     //Route::get('home', function (){
-      // return view('Acl::home/index');
+    // return view('Acl::home/index');
     //});
 
     /*
@@ -45,5 +45,15 @@ Route::middleware(['web' , 'acl'])->group(function () {
      */
     Route::get('acl/getPermissions/{from}/{to}/{id}', 'cyrixbiz\acl\Http\Controllers\AclController@getPermissions')->name('acl.getPermissions');
     Route::post('acl/setPermissions', 'cyrixbiz\acl\Http\Controllers\AclController@setPermissions')->name('acl.setPermissions');
+
+    /*
+     * Helper
+     */
+
+    Route::get('acl/setRoutes', function (\cyrixbiz\acl\Repositories\Resource\ResourceRepository $repository) {
+        $class = new \cyrixbiz\acl\Helper\Route\AclRouteHelper($repository);
+        $class->insertResources();
+        return redirect()->route('home')->with('status', __('AclLang::views.routes_success'));
+    })->name('acl.setRoutes');
 });
 

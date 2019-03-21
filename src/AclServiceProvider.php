@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace cyrixbiz\acl;
 use cyrixbiz\acl\Services\AclService;
 use Illuminate\Support\Facades\Blade;
@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class AclServiceProvider extends ServiceProvider {
 
     /**
-     *
+     * @return void
      */
     public function boot()
     {
@@ -52,7 +52,9 @@ class AclServiceProvider extends ServiceProvider {
     }
 
     /**
+     * Register the acl services.
      *
+     * @return void
      */
     public function register()
     {
@@ -72,7 +74,9 @@ class AclServiceProvider extends ServiceProvider {
     }
 
     /**
+     * set the Blade Variables
      *
+     * @return void
      */
     public function setBladeVariables()
     {
@@ -86,6 +90,18 @@ class AclServiceProvider extends ServiceProvider {
         Blade::if('perms', function (array $items)
         {
             return hasResource($items);
+        });
+
+        Blade::if('orPerms', function (array $items)
+        {
+            foreach ($items as $value)
+            {
+                if(hasResource($value))
+                {
+                    return true;
+                }
+            }
+            return false;
         });
 
     }
