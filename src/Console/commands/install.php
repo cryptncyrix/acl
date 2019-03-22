@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace cyrixbiz\acl\commands;
+namespace cyrixbiz\acl\Console\commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
@@ -41,15 +41,18 @@ class AclCommand extends Command
     public function handle()
     {
 
-
-        $this->startBar();
+        $this->startBar(6);
 
         // Create the Auth from Laravel
         $this->setAuth();
         $this->setAdvance();
 
-        // Publish the Config
-        $this->setConfig();
+        // Create the Routes
+        $this->setRoutes();
+        $this->setAdvance();
+
+        // Publish the Config, View- and Language-Files
+        $this->setResourceFiles();
         $this->setAdvance();
 
         // Create the Tables
@@ -82,11 +85,22 @@ class AclCommand extends Command
         return $this->info(__('AclLang::commands.auth_jump'));
     }
 
+    public function setRoutes()
+    {
+        file_put_contents(
+            base_path('routes/web.php'),
+            file_get_contents(__DIR__.'../../stubs/routes.stub'),
+            FILE_APPEND
+        );
+
+        return $this->info('Routes Created');
+    }
+
     /**
      * Copy the Config File
      * @return int
      */
-    public function setConfig() : int
+    public function setResourceFiles() : int
     {
         $this->info(__('AclLang::commands.config'));
 
@@ -156,12 +170,12 @@ class AclCommand extends Command
     }
 
     /**
-     * Start the Status Bar
+     * @param int $max
      * @return bool|null
      */
-    public function startBar() : ?bool
+    public function startBar(int $max) : ?bool
     {
-        $this->bar = $this->output->createProgressBar(5);
+        $this->bar = $this->output->createProgressBar($max);
         return $this->bar->start();
     }
 

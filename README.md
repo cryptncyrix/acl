@@ -45,7 +45,7 @@
     ```php
     protected $middlewareGroups = [
       //
-    'acl' => [\cyrixbiz\acl\Middleware\Acl::class,
+    'acl' => [\cyrixbiz\acl\Http\Middleware\Acl::class,
             ],
     ```    
 

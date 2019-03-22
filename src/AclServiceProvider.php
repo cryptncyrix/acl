@@ -18,13 +18,9 @@ class AclServiceProvider extends ServiceProvider {
         include_once __DIR__.'/Helper/helpers.php';
 
         /*
-         * Load the Routes from the Package
-         */
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
-        /*
          * Load the Views from the Package
          */
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'AclView');
+        $this->loadViewsFrom(__DIR__.'/resources/views/acl', 'AclView');
 
         /*
          * Load the Translation from the Package
@@ -48,7 +44,22 @@ class AclServiceProvider extends ServiceProvider {
             __DIR__ . '/config/acl.php' => config_path('acl.php'),
         ]);
 
-        $this->commands([\cyrixbiz\acl\commands\AclCommand::class]);
+        /*
+         * Publish the View-Files
+         */
+        $this->publishes([
+            __DIR__ . '/resources/views' => resource_path('views/vendor/AclView'),
+        ]);
+
+        /*
+         * Publish the Languages-Files
+         */
+        $this->publishes([
+            __DIR__ . '/resources/lang' => resource_path('lang/vendor/AclLang'),
+        ]);
+
+
+        $this->commands([\cyrixbiz\acl\Console\commands\AclCommand::class]);
     }
 
     /**

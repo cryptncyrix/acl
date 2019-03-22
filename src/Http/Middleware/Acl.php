@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace cyrixbiz\acl\Middleware;
+namespace cyrixbiz\acl\Http\Middleware;
 
 use Closure;
 
@@ -7,9 +7,7 @@ use cyrixbiz\acl\Exceptions\Acl\AclException;
 use cyrixbiz\acl\Exceptions\Acl\AclMethodException;
 use cyrixbiz\acl\Exceptions\Acl\AclMiddlewareException;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 /**
