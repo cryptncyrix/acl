@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace cyrixbiz\acl\Eloquent;
+namespace cyrixbiz\acl\Models\Eloquent;
 
 use cyrixbiz\acl\Contracts\Repository\RepositoryInterface;
 use cyrixbiz\acl\Exceptions\Repository\RepositoryException;
@@ -13,7 +13,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * Class Repository
  * @package App\Database\Eloquent
  */
-abstract class Repository implements RepositoryInterface     {
+abstract class Repository implements RepositoryInterface {
 
     /**
      * @var Container
@@ -50,7 +50,7 @@ abstract class Repository implements RepositoryInterface     {
         $model = $this->app->make($this->model());
         if(!$model instanceof Model)
         {
-            throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+            throw new RepositoryException($this->model(), gettype($this->model()));
 
         }
         return $this->model = $model;

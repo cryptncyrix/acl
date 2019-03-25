@@ -10,6 +10,8 @@ return
         'middleware' => 'Middleware - Error | Use for the :route - method  f.Example: ->name("foobar")',
         'unauthorized' => 'Login Required - Please Check your activity status',
         'permissen_denied' => 'This user doesn\'t have sufficient permissions.',
+        'repository_model_type' => 'Class :class must be an instance of Illuminate\\Database\\Eloquent\\Model, :type given.',
+        'command_argument_not_exists' => 'Your Argument is not valid, please use a valid Argument - Check the Readme for Informations.',
         'role_blocked' => 'This Role can\'t be deleted. It\'s a secure Role. Change the \'blockedRole\' in the Config-File.',
         'superAdmin' => 'This User can\'t be deleted. It\'s the superAdmin. Change the \'superAdmin\', in the Config-File.',
         'form'  => 'FormError - Param not in Old Array',

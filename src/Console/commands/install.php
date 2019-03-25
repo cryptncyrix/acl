@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Console\commands;
 
+use cyrixbiz\acl\Exceptions\Command\CommandArgumentNotExistsException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,7 +14,7 @@ class AclCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'make:acl';
+    protected $signature = 'make:acl {action?}';
 
     /**
      * @var string
@@ -40,6 +41,12 @@ class AclCommand extends Command
      */
     public function handle()
     {
+
+        // Install a Single Method
+        if($this->single())
+        {
+            return true;
+        }
 
         $this->startBar(6);
 
@@ -73,6 +80,21 @@ class AclCommand extends Command
     }
 
     /**
+     * Install a Single Method
+     * @return bool
+     */
+    public function single() : bool
+    {
+        if(!is_null($this->argument('action')))
+        {
+            throw_unless(method_exists($this, $this->argument('action')), CommandArgumentNotExistsException::class);
+            $this->{$this->argument('action')}();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Create the Laravel Auth
      * @return int|null
      */
@@ -85,7 +107,11 @@ class AclCommand extends Command
         return $this->info(__('AclLang::commands.auth_jump'));
     }
 
-    public function setRoutes()
+    /**
+     * Set the Routes to web.php
+     * @return bool|null
+     */
+    public function setRoutes() : ?bool
     {
         file_put_contents(
             base_path('routes/web.php'),
@@ -152,7 +178,7 @@ class AclCommand extends Command
         ], [
             'name' => ['required', 'min:5'],
             'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/']
+            'password' => ['required', 'regex:/(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/']
         ]);
 
 
@@ -173,7 +199,7 @@ class AclCommand extends Command
      * @param int $max
      * @return bool|null
      */
-    public function startBar(int $max) : ?bool
+    protected function startBar(int $max) : ?bool
     {
         $this->bar = $this->output->createProgressBar($max);
         return $this->bar->start();
@@ -183,7 +209,7 @@ class AclCommand extends Command
      * Status Bar next Step
      * @return bool|null
      */
-    public function setAdvance() : ?bool
+    protected function setAdvance() : ?bool
     {
         return $this->bar->advance();
     }
@@ -192,7 +218,7 @@ class AclCommand extends Command
      * Close the Statusbar
      * @return bool|null
      */
-    public function closeBar() : ?bool
+    protected function closeBar() : ?bool
     {
         $this->bar->finish();
         return $this->info(__('AclLang::commands.success'));

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-
 namespace cyrixbiz\acl\Repositories\Resource;
 
-use cyrixbiz\acl\Eloquent\Repository;
+use cyrixbiz\acl\Models\Eloquent\Repository;
+
 
 /**
  * Class ResourceRepository

@@ -24,7 +24,7 @@ return [
          * Default: 1 | Change this to
          */
 
-        'superAdmin' => 11,
+        'superAdmin' => 1,
 
         /**
          * All Member in this Role don't have Rights
@@ -35,7 +35,7 @@ return [
          * Default: 5 | Change this to your Role
          */
 
-        'blockedRole' => 14,
+        'blockedRole' => 5,
 
         /**
          * Use RouteName or RouteAction
@@ -66,8 +66,8 @@ return [
     ],
 
     'model' => [
-        'roles'     => 'cyrixbiz\acl\Models\Role',
-        'resources' => 'cyrixbiz\acl\Models\Resource',
+        'roles'     => 'cyrixbiz\acl\Models\Role\Role',
+        'resources' => 'cyrixbiz\acl\Models\Resource\Resource',
 
         // Don' Change this Line
         'users'     => config('auth.providers.users.model'), // use from auth Config File

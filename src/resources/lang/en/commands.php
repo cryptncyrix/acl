@@ -10,6 +10,6 @@ return [
     'admin_fail' => ' Admin not created, errors: ',
     'name' => ' Set an Admin-Name.',
     'email' => ' Set an E-Mail Adress',
-    'password' => ' Set a Password ( Min. 8 Signs / 1 Low- and 1 Upper- Case / 1 Number )',
+    'password' => ' Set a Password ( Min. 8 Signs and 3 of 4 Rules 1 Low- and 1 Upper- Case / 1 Number / Special Chars )',
     'success' => ' Acl was successfully installed. Please Check your Config-File.',
 ];

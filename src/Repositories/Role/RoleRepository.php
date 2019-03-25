@@ -1,8 +1,7 @@
 <?php declare(strict_types=1);
-
 namespace cyrixbiz\acl\Repositories\Role;
 
-use cyrixbiz\acl\Eloquent\Repository;
+use cyrixbiz\acl\Models\Eloquent\Repository;
 use cyrixbiz\acl\Exceptions\Acl\AclBlockedException;
 
 /**

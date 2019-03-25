@@ -8,7 +8,7 @@
 
 * Composer
     ```php
-    composer require cyrixbiz/acl
+    composer require cyrixbiz/acl dev-master
     ```
     
 
@@ -34,11 +34,25 @@
     , hasRelation;
     ```
     
-* Install
+* Install all
 
     ```php
     php artisan make:acl
     ```
+    
+* Install a Single Method
+    
+    * Allow Arguments: 
+       - setAuth ( Laravel Auth )
+       - setRoutes ( ACL Routes to web.php )
+       - setResourceFiles ( Lang and View Files)
+       - setTables ( Set Database Tables )
+       - setSeeds ( Insert Database Seeds)
+       - setAdmin ( Set an Admin )
+
+    ```php
+    php artisan make:acl argument
+    ```    
 
 * Edit App\Http\Kernel and add the following lines
 

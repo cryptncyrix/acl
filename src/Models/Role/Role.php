@@ -1,28 +1,23 @@
 <?php declare(strict_types=1);
-namespace cyrixbiz\acl\Models;
-
+namespace cyrixbiz\acl\Models\Role;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Resource
+ * Class Role
  * @package cyrixbiz\acl\Models
  */
-class Resource extends Model {
-
+class Role extends Model {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-
-    protected $table = 'resources';
-
+    protected $table = 'roles';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-
     protected $fillable = ['name', 'default_access', 'info'];
 
     /**
@@ -41,15 +36,14 @@ class Resource extends Model {
      */
     public $timestamps = false;
 
-
     /**
      * @param void
      *
      * @return @return \Illuminate\Database\Eloquent\Relations\belongsToMany
      */
-    public function roles()
+    public function resources()
     {
-        return $this->belongsToMany(config('acl.model.roles'), 'roles_resources');
+        return $this->belongsToMany(config('acl.model.resources'), 'roles_resources');
 
     }
 
@@ -60,7 +54,6 @@ class Resource extends Model {
      */
     public function users()
     {
-        return $this->belongsToMany(config('auth.providers.users.model'), 'users_resources');
-
+        return $this->belongsToMany(config('auth.providers.users.model'), 'users_roles');
     }
 }
