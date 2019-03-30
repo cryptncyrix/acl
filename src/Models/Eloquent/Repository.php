@@ -116,7 +116,6 @@ abstract class Repository implements RepositoryInterface {
      */
     public function delete($id, $where = [])  : int
     {
-
         if(!empty($where))
         {
             return $this->model
@@ -140,7 +139,6 @@ abstract class Repository implements RepositoryInterface {
             return $this->model->find($id, $columns);
         }
         return $this->model->with($with)->find($id, $columns);
-
     }
 
     /**
@@ -157,7 +155,6 @@ abstract class Repository implements RepositoryInterface {
             return $this->model->where($attribute, '=', $value)->first($columns);
         }
         return $this->model->with($with)->where($attribute, '=', $value)->first($columns);
-
     }
 
     /**

@@ -6,7 +6,6 @@ use cyrixbiz\acl\Http\Requests\User\UserUpdateRequest;
 use cyrixbiz\acl\Repositories\User\UserRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 /**
@@ -32,7 +31,7 @@ class UserController
     public function __construct(UserRepository $repository)
     {
         $this->repository = $repository;
-        $this->action = strtolower(substr(config('acl.model.users'), strripos(config('acl.model.users'), '\\') + 1));
+        $this->action = strtolower(substr(config('auth.providers.users.model'), strripos(config('auth.providers.users.model'), '\\') + 1));
     }
 
 
@@ -66,10 +65,8 @@ class UserController
 
     public function store(UserRequest $request) : RedirectResponse
     {
-
         $this->repository->create($request->validated());
-
-        return redirect()->route('user.index');
+        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success', ['user' => $request->validated()['name']]));
     }
 
     /**
@@ -103,10 +100,7 @@ class UserController
     public function update(UserUpdateRequest $request) : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
-
-        return redirect()->route('user.index');
-
-
+        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success_updated', ['user' => $request->validated()['name']]));
     }
 
     /**
@@ -119,11 +113,9 @@ class UserController
     {
         if($id == config('acl.acl.superAdmin'))
         {
-            return redirect()->route('user.index')->with('error', __('AclLang::exceptions.superAdmin'));
+            return redirect()->route('user.index')->with('error', __('AclLang::exception.superAdmin'));
         }
         $this->repository->delete($id);
-        return redirect()->route('user.index');
+        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success_destroyed', ['user' => $id]));
     }
-
-
 }

@@ -65,13 +65,13 @@ return [
         'time' => 60
     ],
 
+    /**
+     * Models
+     */
+
     'model' => [
         'roles'     => 'cyrixbiz\acl\Models\Role\Role',
         'resources' => 'cyrixbiz\acl\Models\Resource\Resource',
-
-        // Don' Change this Line
-        'users'     => config('auth.providers.users.model'), // use from auth Config File
-
     ],
 
 ];

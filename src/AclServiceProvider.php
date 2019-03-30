@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl;
+
 use cyrixbiz\acl\Services\AclService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -58,7 +59,6 @@ class AclServiceProvider extends ServiceProvider {
             __DIR__ . '/resources/lang' => resource_path('lang/vendor/AclLang'),
         ]);
 
-
         $this->commands([\cyrixbiz\acl\Console\commands\AclCommand::class]);
     }
 
@@ -97,7 +97,6 @@ class AclServiceProvider extends ServiceProvider {
             return hasResource($item);
         });
 
-
         Blade::if('perms', function (array $items)
         {
             return hasResource($items);
@@ -114,7 +113,6 @@ class AclServiceProvider extends ServiceProvider {
             }
             return false;
         });
-
     }
 }
 ?>

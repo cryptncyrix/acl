@@ -30,7 +30,6 @@ class ResourceController
      * ResourceController constructor.
      * @param Container $app
      */
-
     public function __construct(ResourceRepository $repository)
     {
         $this->repository = $repository;
@@ -53,7 +52,6 @@ class ResourceController
      * Create a Resource
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-
     public function create() : View
     {
         return view('AclView::roleresource\Create', ['action' => $this->action]);
@@ -64,12 +62,10 @@ class ResourceController
      * @param ResourceRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-
     public function store(ResourceRequest $request) : RedirectResponse
     {
-
         $this->repository->create($request->validated());
-        return redirect()->route('resource.index');
+        return redirect()->route('resource.index')->with('status', __('AclLang::views.resources_success', ['resource' => $request->validated()['name']]));
     }
 
     /**
@@ -88,7 +84,6 @@ class ResourceController
      * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-
     public function edit(int $id) : View
     {
         return view('AclView::roleresource\Edit', ['repository' => $this->repository->find($id), 'action' => $this->action]);
@@ -99,13 +94,10 @@ class ResourceController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-
     public function update(ResourceUpdateRequest $request) : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
-        return redirect()->route('resource.index');
-
-
+        return redirect()->route('resource.index')->with('status', __('AclLang::views.resources_success_updated', ['resource' => $request->validated()['name']]));
     }
 
     /**
@@ -113,12 +105,9 @@ class ResourceController
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-
     public function destroy(int $id) : RedirectResponse
     {
         $this->repository->delete($id);
-        return redirect()->route('resource.index');
+        return redirect()->route('resource.index')->with('status', __('AclLang::views.resources_success_destroyed', ['resource' => $id]));
     }
-
-
 }

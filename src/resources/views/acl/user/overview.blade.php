@@ -1,12 +1,6 @@
 @extends('AclView::layout/layout')
 @section('content')
-
-@if(session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
-@endif
-
+@include('AclView::partials.status')
 <div class="col-sm-8 offset-md-2 py-2 text-center">
     <table id="role" class="table table-striped table-hover table-bordered table-dark" cellspacing="0" width="100%">
         <caption class="text-center"> {{__('AclLang::views.overview')}} </caption>
@@ -33,7 +27,8 @@
                         <a class="btn btn-xs btn-warning" href="{{ route($action.'.show' , $value->id) }}"> <i class="fa fa-btn fa-edit"></i>{{__('AclLang::views.show')}}</a>
                     @endperm
                     @perm($action.'.destroy')
-                        <a class="btn btn-xs btn-danger" href="{{ route($action.'.destroy' , $value->id) }}"> <i class="fa fa-btn fa-edit"></i>{{__('AclLang::views.destroy')}}</a>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_{{$value->id}}"><i class="fa fa-btn fa-trash"></i>{{__('AclLang::views.destroy')}}</button>
+                        @include('AclView::user._modals')
                     @endperm
                 </td>
                 @if(isset($link) && count($link) == 2)

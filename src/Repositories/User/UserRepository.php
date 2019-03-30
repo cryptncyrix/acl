@@ -14,7 +14,7 @@ class UserRepository extends Repository
      */
     public function model()
     {
-        return config('acl.model.users');
+        return config('auth.providers.users.model');
     }
 
     /**

@@ -3,10 +3,12 @@ namespace cyrixbiz\acl\Http\Requests\Acl;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class AclRequest
+ * @package cyrixbiz\acl\Http\Requests\Acl
+ */
 class AclRequest extends FormRequest
 {
-
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +24,6 @@ class AclRequest extends FormRequest
                 $rules['new.'. $key] = 'boolean';
                 $rules['old.'. $key] = 'boolean|nullable';
         }
-
         return $rules;
     }
 

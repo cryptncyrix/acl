@@ -4,7 +4,7 @@ namespace cyrixbiz\acl\Exceptions\Acl;
 use Exception;
 
 /**
- * Class AclException
+ * Class AclMiddlewareException
  * @package cyrixbiz\acl\Exceptions\Acl
  */
 class AclMiddlewareException extends Exception

@@ -57,6 +57,6 @@ Route::middleware(['web' , 'acl'])->group(function () {
     Route::get('acl/setRoutes', function (\cyrixbiz\acl\Repositories\Resource\ResourceRepository $repository) {
         $class = new \cyrixbiz\acl\Helper\Route\AclRouteHelper($repository);
         $class->insertResources();
-        return redirect()->route('home')->with('status', __('AclLang::views.routes_success'));
+        return redirect()->route('home')->with('status', __('AclLang::views.routes_created_success'));
     })->name('acl.setRoutes');
 });

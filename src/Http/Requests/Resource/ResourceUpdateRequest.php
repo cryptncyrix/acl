@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Http\Requests\Resource;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class ResourceUpdateRequest
+ * @package cyrixbiz\acl\Http\Requests\Resource
+ */
 class ResourceUpdateRequest extends FormRequest {
 
 

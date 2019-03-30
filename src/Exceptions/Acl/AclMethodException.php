@@ -4,7 +4,7 @@ namespace cyrixbiz\acl\Exceptions\Acl;
 use Exception;
 
 /**
- * Class AclException
+ * Class AclMethodException
  * @package cyrixbiz\acl\Exceptions\Acl
  */
 class AclMethodException extends Exception
@@ -22,5 +22,4 @@ class AclMethodException extends Exception
     {
         $this->message = __('AclLang::exception.method', ['name' => $method]);
     }
-
 }

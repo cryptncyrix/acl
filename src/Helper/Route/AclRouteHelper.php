@@ -15,7 +15,7 @@ class AclRouteHelper
     protected $items = [];
 
     /**
-     * @var ResourceRepository
+     * @var $repository
      */
     protected $repository;
 
@@ -113,5 +113,4 @@ class AclRouteHelper
         }
         return [];
     }
-
 }

@@ -2,7 +2,6 @@
     <div class="collapse bg-dark" id="navbarHeader">
         <div class="container">
             <div class="row">
-
                 <div class="col-sm-3 py-3 text-center">
                     @orPerms(['role.index' , 'role.create'])
                     <h4 class="text-white">{{ __('AclLang::views.roles') }}</h4>
@@ -16,21 +15,19 @@
                     </ul>
                     @endorPerms
                 </div>
-
                 <div class="col-sm-3 py-3 text-center">
                     @orPerms(['resource.index' , 'resource.create'])
-                    <h4 class="text-white">{{ __('AclLang::views.permissions') }}</h4>
+                    <h4 class="text-white">{{ __('AclLang::views.resources') }}</h4>
                     <ul class="list-unstyled">
                         @perm('resource.index')
-                        <li><a href="{{ route('resource.index') }}" class="text-white">{{ __('AclLang::views.permissions_overview') }}</a></li>
+                        <li><a href="{{ route('resource.index') }}" class="text-white">{{ __('AclLang::views.resources_overview') }}</a></li>
                         @endperm
                         @perm('resource.create')
-                        <li><a href="{{ route('resource.create') }}" class="text-white">{{ __('AclLang::views.permissions_create') }}</a></li>
+                        <li><a href="{{ route('resource.create') }}" class="text-white">{{ __('AclLang::views.resources_create') }}</a></li>
                         @endperm
                     </ul>
                     @endorPerms
                 </div>
-
                 <div class="col-sm-3 py-3 text-center">
                     @orPerms(['user.index' , 'user.create'])
                     <h4 class="text-white">{{ __('AclLang::views.users') }}</h4>
@@ -44,7 +41,6 @@
                     </ul>
                     @endorPerms
                 </div>
-
                 <div class="col-sm-3 py-3 text-center">
                     @perm('acl.setRoutes')
                     <h4 class="text-white">{{ __('AclLang::views.helper') }}</h4>
@@ -54,9 +50,8 @@
                     @endperm
                     <h4 class="text-white">{{ __('AclLang::views.logout') }}</h4>
                     <a class="text-white" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> Logout </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" >{{ csrf_field() }}</form>
                 </div>
-
             </div>
         </div>
     </div>

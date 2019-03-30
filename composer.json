@@ -7,6 +7,7 @@
             "email": "admin@cyrix.biz",
             "homepage": "http://www.cyrix.biz",
             "role": "Developer",
+            "license": "MIT",
             "keywords": [
                 "auth",
                 "permissions",
@@ -14,8 +15,7 @@
                 "security",
                 "acl",
                 "middleware"
-            ],
-            "license": "MIT"
+            ]
         }
     ],
     "require": {

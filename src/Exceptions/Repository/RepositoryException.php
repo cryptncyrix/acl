@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
-
 namespace cyrixbiz\acl\Exceptions\Repository;
 
 use Exception;
 
+/**
+ * Class RepositoryException
+ * @package cyrixbiz\acl\Exceptions\Repository
+ */
 class RepositoryException extends Exception {
 
     /**
@@ -19,5 +22,4 @@ class RepositoryException extends Exception {
     {
         $this->message = __('AclLang::exception.repository_model_type', ['class' => $class, 'type' => $type]);
     }
-
 }

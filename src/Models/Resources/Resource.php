@@ -14,7 +14,6 @@ class Resource extends Model {
      *
      * @var string
      */
-
     protected $table = 'resources';
 
     /**
@@ -22,7 +21,6 @@ class Resource extends Model {
      *
      * @var array
      */
-
     protected $fillable = ['name', 'default_access', 'info'];
 
     /**
@@ -40,7 +38,6 @@ class Resource extends Model {
      * @var type
      */
     public $timestamps = false;
-
 
     /**
      * @param void

@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Http\Requests\Role;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class RoleUpdateRequest
+ * @package cyrixbiz\acl\Http\Requests\Role
+ */
 class RoleUpdateRequest extends FormRequest {
-
 
     /**
      * Get the validation rules that apply to the request.

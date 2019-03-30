@@ -41,7 +41,6 @@ class AclCommand extends Command
      */
     public function handle()
     {
-
         // Install a Single Method
         if($this->single())
         {
@@ -103,7 +102,6 @@ class AclCommand extends Command
         if ($this->confirm(__('AclLang::commands.auth'))) {
             return $this->call('make:auth');
         }
-
         return $this->info(__('AclLang::commands.auth_jump'));
     }
 
@@ -118,8 +116,7 @@ class AclCommand extends Command
             file_get_contents(__DIR__.'../../stubs/routes.stub'),
             FILE_APPEND
         );
-
-        return $this->info('Routes Created');
+        return $this->info(__('AclLang::commands.route'));
     }
 
     /**
@@ -158,7 +155,7 @@ class AclCommand extends Command
     }
 
     /**
-     * First Admin - SuperAdmin
+     * Create an Admin
      * @return int
      */
     public function setAdmin() : ?bool
@@ -171,20 +168,30 @@ class AclCommand extends Command
         $password = $this->ask(__('AclLang::commands.password'));
         $admin->password = $password;
 
-        $validator = Validator::make([
-            'name' => $admin->name,
-            'email' => $admin->email,
-            'password' => $password,
-        ], [
-            'name' => ['required', 'min:5'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'regex:/(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/']
-        ]);
-
+        $validator = Validator::make(
+            [
+                'name' => $admin->name,
+                'email' => $admin->email,
+                'password' => $password,
+            ],
+            [
+                'name' => ['required', 'min:5'],
+                'email' => ['required', 'email', 'unique:users,email'],
+                'password' => ['required', 'regex:/(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*/']
+            ],
+            [
+                'name.required' => __('AclLang::validation.name.required'),
+                'name.min' => __('AclLang::validation.name.min'),
+                'email.required' => __('AclLang::validation.email.required'),
+                'email.email' => __('AclLang::validation.email.email'),
+                'email.unique' => __('AclLang::validation.email.unique'),
+                'password.required' => __('AclLang::validation.password.required'),
+                'password.regex' => __('AclLang::validation.password.regex'),
+            ]
+        );
 
         if ($validator->fails()) {
             $this->info(__('AclLang::commands.admin_fail'));
-
             foreach ($validator->errors()->all() as $error) {
                 $this->error($error);
             }

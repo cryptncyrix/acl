@@ -3,10 +3,12 @@ namespace cyrixbiz\acl\Http\Requests\Resource;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class ResourceRequest
+ * @package cyrixbiz\acl\Http\Requests\Resource
+ */
 class ResourceRequest extends FormRequest
 {
-
-
     /**
      * Get the validation rules that apply to the request.
      *

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Hash;
  */
 trait hasRelation
 {
-
     /**
      * @param $password
      */
@@ -19,10 +18,8 @@ trait hasRelation
         {
             $this->attributes['password'] = Hash::make($password);
         }
-
         $this->attributes['password'] = Hash::needsRehash($password);
     }
-
 
     /**
      * @param void
@@ -32,7 +29,6 @@ trait hasRelation
     public function resources()
     {
         return $this->belongsToMany(config('acl.model.resources'), 'users_resources');
-
     }
 
     /**

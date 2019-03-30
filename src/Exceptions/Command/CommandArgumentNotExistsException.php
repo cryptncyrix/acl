@@ -4,8 +4,8 @@ namespace cyrixbiz\acl\Exceptions\Command;
 use Exception;
 
 /**
- * Class AclException
- * @package cyrixbiz\acl\Exceptions\Acl
+ * Class CommandArgumentNotExistsException
+ * @package cyrixbiz\acl\Exceptions\Command
  */
 class CommandArgumentNotExistsException extends Exception
 {
@@ -22,5 +22,4 @@ class CommandArgumentNotExistsException extends Exception
     {
         $this->message = __('AclLang::exception.command_argument_not_exists');
     }
-
 }

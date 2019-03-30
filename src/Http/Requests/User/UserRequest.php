@@ -3,8 +3,11 @@ namespace cyrixbiz\acl\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UserRequest
+ * @package cyrixbiz\acl\Http\Requests\User
+ */
 class UserRequest extends FormRequest {
-
 
     /**
      * Get the validation rules that apply to the request.

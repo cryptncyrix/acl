@@ -3,10 +3,12 @@ namespace cyrixbiz\acl\Http\Requests\Role;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class RoleRequest
+ * @package cyrixbiz\acl\Http\Requests\Role
+ */
 class RoleRequest extends FormRequest
 {
-
-
     /**
      * Get the validation rules that apply to the request.
      *

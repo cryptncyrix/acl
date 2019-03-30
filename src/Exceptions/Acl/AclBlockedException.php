@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Exceptions\Acl;
 
-
 use Exception;
 
 /**
- * Class AclException
+ * Class AclBlockedException
  * @package cyrixbiz\acl\Exceptions\Acl
  */
 class AclBlockedException extends Exception

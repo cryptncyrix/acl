@@ -22,7 +22,6 @@ class AclController
         $resourceRepository,
         $userRepository;
 
-
     /**
      * @var array
      */
@@ -42,13 +41,11 @@ class AclController
      * AclController constructor.
      * @param Container $app
      */
-
     public function __construct(RoleRepository $roleRepository, ResourceRepository $resourceRepository, UserRepository $userRepository)
     {
-            $this->roleRepository        = $roleRepository;
-            $this->resourceRepository    = $resourceRepository;
-            $this->userRepository        = $userRepository;
-
+        $this->roleRepository        = $roleRepository;
+        $this->resourceRepository    = $resourceRepository;
+        $this->userRepository        = $userRepository;
     }
 
     /**
@@ -71,26 +68,26 @@ class AclController
             abort(404);
         }
 
-            foreach ($fromModel as $valueFrom)
+        foreach ($fromModel as $valueFrom)
+        {
+            $permission[$valueFrom->id] = [0 => false, 1 => $valueFrom->name];
+            foreach ($toModel->find($id)->{$from.'s'} as $valueTo)
             {
-                $permission[$valueFrom->id] = [0 => false, 1 => $valueFrom->name];
-                foreach ($toModel->find($id)->{$from.'s'} as $valueTo)
+                if($valueFrom->id == $valueTo->id)
                 {
-                    if($valueFrom->id == $valueTo->id)
-                    {
-                        $permission[$valueFrom->id] = [0 => true, 1 => $valueFrom->name];
-                        break;
-                    }
-
+                    $permission[$valueFrom->id] = [0 => true, 1 => $valueFrom->name];
+                    break;
                 }
             }
+        }
 
-            return view('AclView::acl/getresource',
-                ['from' => $this->{$to.'Repository'}->find($id), // User -> ForExample Cyrix
-                    'to'    => $permission, // All Roles ( Example )
-                    'action' => $to.'.'.$from,
-                    'id' => $id]);
-
+        return view('AclView::acl/getresource',
+            ['from' => $this->{$to.'Repository'}->find($id), // User -> ForExample Cyrix
+                'to'    => $permission, // All Roles ( Example )
+                'action_split' => ucfirst($from).'s',
+                'action' => $to.'.'.$from,
+                'id' => $id
+            ]);
     }
 
     /**
@@ -100,20 +97,18 @@ class AclController
      */
     public function setPermissions(AclRequest $request) : RedirectResponse
     {
-
         $input  = $request->validated();
         $explodedAction = explode('.', $input['action']);
 
         if(hasResource($explodedAction[1].'.'.$explodedAction[0]))
         {
-            if(!$this->checkBlockedRole($input['new'], (int)$input['_id'], $explodedAction[1].'.'.$explodedAction[0])) {
-
+            if(!$this->checkBlockedRole($input['new'], (int)$input['_id'], $explodedAction[1].'.'.$explodedAction[0]))
+            {
                 $attach = $detach = [];
                 foreach ($input['new'] as $key => $value) {
                     if (!array_key_exists($key, $input['old'])) {
                         throw new AclFormException();
                     }
-
                     if ($value == true) {
                         if ($input['old'][$key] == 0) {
                             $attach[] = $key;
@@ -122,12 +117,9 @@ class AclController
                     } else {
                         $detach[] = $key;
                     }
-
                 }
-
                 if ($attach != []) {
                     $this->{$explodedAction[0] . 'Repository'}->attach($attach, $explodedAction[1] . 's', (int)$input['_id']);
-
                 }
                 if ($detach != []) {
                     $this->{$explodedAction[0] . 'Repository'}->detach($detach, $explodedAction[1] . 's', (int)$input['_id']);
@@ -138,12 +130,17 @@ class AclController
                 $this->setBlockedRole((int)$input['_id']);
             }
 
-            return redirect()->route('acl.getPermissions', [$explodedAction[1], $explodedAction[0], $input['_id']]);
+            return redirect()->route('acl.getPermissions', [$explodedAction[1], $explodedAction[0], $input['_id']])->with('status',  __('AclLang::views.success',
+                ['action' => ucfirst($explodedAction[1]),
+                'to' => ucfirst($explodedAction[0])
+            ]));
         }
         abort('401');
     }
 
     /**
+     * Check to give the blocked Role
+     *
      * @param array $roles
      * @param int $userId
      * @param string $resource
@@ -151,18 +148,16 @@ class AclController
      */
     protected function checkBlockedRole(array $roles, int $userId, string $resource) : bool
     {
-        if(in_array($resource, $this->valid) || !hasResource($resource))
-        {
-            if(config('acl.acl.superAdmin') == $userId)
-            {
-                throw AclException::superAdmin();
-
-            } else {
-
-                if(array_key_exists(config('acl.acl.blockedRole'), $roles))
-                {
-                    return true;
+        if(in_array($resource, $this->valid) || !hasResource($resource)) {
+            if ($resource != 'role.user') {
+                return false;
+            }
+            if (array_key_exists(config('acl.acl.blockedRole'), $roles) && $roles[config('acl.acl.blockedRole')] == true) {
+                if (config('acl.acl.superAdmin') == $userId) {
+                    throw AclException::superAdmin();
                 }
+                return true;
+            } else {
                 return false;
             }
         }
@@ -170,6 +165,7 @@ class AclController
     }
 
     /**
+     * Remove all Rights and set the Blocked Role
      * @param int $userId
      * @return bool
      */

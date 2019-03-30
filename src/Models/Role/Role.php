@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Models\Role;
+
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -7,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package cyrixbiz\acl\Models
  */
 class Role extends Model {
+
     /**
      * The database table used by the model.
      *
@@ -44,7 +46,6 @@ class Role extends Model {
     public function resources()
     {
         return $this->belongsToMany(config('acl.model.resources'), 'roles_resources');
-
     }
 
     /**

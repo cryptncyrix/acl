@@ -3,7 +3,6 @@ namespace cyrixbiz\acl\Repositories\Resource;
 
 use cyrixbiz\acl\Models\Eloquent\Repository;
 
-
 /**
  * Class ResourceRepository
  * @package cyrixbiz\acl\Repositories\Resource

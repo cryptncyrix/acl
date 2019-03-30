@@ -2,7 +2,6 @@
 namespace cyrixbiz\acl\Services;
 
 use Carbon\Carbon;
-use cyrixbiz\acl\Exceptions\Acl\AclException;
 use cyrixbiz\acl\Repositories\Resource\ResourceRepository;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Collection;
@@ -44,13 +43,11 @@ class AclService {
      */
     protected $resources = [];
 
-
     /**
      * AclService constructor.
      * @param ResourceRepository $resource
      * @param Guard $auth
      */
-
     public function __construct(ResourceRepository $resource, Guard $auth)
     {
         $this->resource = $resource;
@@ -82,14 +79,12 @@ class AclService {
         }
         // User is SuperAdmin
         return true;
-
     }
 
 
     /**
      * Get all User Auth Data
      */
-
     public function getAllUserPermissions() : self
     {
         if(!$this->auth->guest())
@@ -112,7 +107,6 @@ class AclService {
      */
     public function getAllTrueResources() : array
     {
-       // dd($this->resource->all());
         foreach($this->resource->all() as $value)
         {
             if($this->checkUserPermissions($value['name'], boolval($value['default_access'])))
@@ -128,13 +122,10 @@ class AclService {
      * @param string $toCheckedString
      * @return boolean
      */
-
     public function checkUserPermissions(string $toCheckedString, bool $defaultAccess = null) : bool
     {
         if(!$this->auth->guest())
         {
-            //dd(config('acl.acl.blockedRole'));
-
             if( $this->getUserAccess($this->user->resources,  $toCheckedString)   )
             {
                 // User - Resource
@@ -187,7 +178,6 @@ class AclService {
      * @param  $stringName
      * @return bool
      */
-
     protected function getDefaultAccessFromResource(bool $defaultAccess) : bool
     {
         return $defaultAccess ?? false;
@@ -203,18 +193,7 @@ class AclService {
 
     protected function getUserAccess(Collection $objectResources, string $stringResource) : bool
     {
-
         return (in_array($stringResource, $objectResources->pluck('name')->all()));
-
-
-        /*foreach($objectResources as $value) {
-            if($value->name == $stringResource){
-
-                return true;
-            }
-        }
-        return false;*/
-
     }
 
     /**
@@ -224,15 +203,12 @@ class AclService {
      * @param  $stringResource
      * @return bool
      */
-
     protected function getRoleAccess(Collection $objectRole, string $stringResource) : bool
     {
-
         foreach($objectRole as $value) {
             if($value->default_access == true)
             {
                 return true;
-
             } else {
 
                 $access = $this->getUserAccess($value->resources, $stringResource);
@@ -244,7 +220,6 @@ class AclService {
             }
         }
         return false;
-
     }
 
     /**
@@ -262,7 +237,6 @@ class AclService {
      */
     protected function setSuperAdmin() : bool
     {
-
         if(isset($this->user->id) && config('acl.acl.superAdmin') == $this->user->id)
         {
            return true;

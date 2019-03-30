@@ -2,7 +2,6 @@
 namespace cyrixbiz\acl\Http\Middleware;
 
 use Closure;
-
 use cyrixbiz\acl\Exceptions\Acl\AclException;
 use cyrixbiz\acl\Exceptions\Acl\AclMethodException;
 use cyrixbiz\acl\Exceptions\Acl\AclMiddlewareException;
@@ -35,7 +34,6 @@ class Acl {
      */
     public function handle(Request $request, Closure $next)
     {
-
         if(config('acl.acl.enable') === true)
         {
             if(Auth::guest())
@@ -65,13 +63,11 @@ class Acl {
         foreach (config('acl.acl.method') as $value)
         {
             throw_unless(method_exists($request->route(), $value), new AclMethodException($value));
-
             $item = $this->{$value}($request);
             if(is_null($item))
             {
                 continue;
             }
-
             return $item;
         }
         throw new AclMiddlewareException($request->route()->getActionName());
@@ -98,14 +94,11 @@ class Acl {
 
     private function getActionName(Request $request) : ?string
     {
-
         if(strpos($request->route()->getActionName(), '@'))
         {
             $action = substr(strrchr($request->route()->getActionName(), '\\') , 1);
             return strtolower(stristr($action , 'Controller', true)) . '.' . substr(stristr($action , '@'), 1);
         }
-
         return null;
     }
-
 }

@@ -1,27 +1,20 @@
 @extends('AclView::layout/layout')
 @section('content')
-
-    @if(session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
-    @endif
-
-    <div class="col-sm-8 offset-md-2 py-2 text-center form">
-
-        <p>{{ __('AclLang::views.name') }}: {{ auth()->user()->name  }}</p>
-        <p>{{ __('AclLang::views.roles') }}:
+<div class="col-sm-8 offset-md-2 py-2 text-center form">
+    @include('AclView::partials.status')
+    <p>{{ __('AclLang::views.name') }}: {{ auth()->user()->name  }}</p>
+    <p>{{ __('AclLang::views.roles') }}:
         @if(config('acl.acl.superAdmin') == auth()->user()->id)
-            < superAdmin >
+            {{ __('AclLang::views.superAdmin') }}
         @endif
         @foreach(auth()->user()->roles as $value)
-         {{ '< '.$value['name'].' >' }}
+            {{ '< '.$value['name'].' >' }}
         @endforeach
-        </p>
-        <p>{{ __('AclLang::views.permissions') }}:
-            @foreach(auth()->user()->resources as $value)
-                {{ '< '.$value['name'].' >' }}
-            @endforeach
-        </p>
-    </div>
+    </p>
+    <p>{{ __('AclLang::views.resources') }}:
+        @foreach(auth()->user()->resources as $value)
+            {{ '< '.$value['name'].' >' }}
+        @endforeach
+    </p>
+</div>
 @endsection

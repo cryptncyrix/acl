@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace cyrixbiz\acl\Exceptions\Acl;
 
-
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -10,7 +9,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class AclException extends HttpException
 {
-
     /**
      * @return AclException
      */
