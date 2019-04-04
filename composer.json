@@ -18,8 +18,10 @@
             ]
         }
     ],
+    "minimum-stability": "dev",
     "require": {
-        "php": ">= 7.1"
+        "php": ">= 7.1",
+        "doctrine/dbal": ">=2.9.2"
     },
     "autoload": {
         "psr-4": {
