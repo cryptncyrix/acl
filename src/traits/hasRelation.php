@@ -14,11 +14,10 @@ trait hasRelation
      */
     public function setPasswordAttribute($password)
     {
-        if(Hash::info($password) ['algoName'] == 'unknown')
+        if(Hash::info($password) ['algoName'] == 'unknown' || Hash::needsRehash($password))
         {
             $this->attributes['password'] = Hash::make($password);
         }
-        $this->attributes['password'] = Hash::needsRehash($password);
     }
 
     /**

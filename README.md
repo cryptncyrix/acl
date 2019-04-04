@@ -49,6 +49,13 @@
        - setTables ( Set Database Tables )
        - setSeeds ( Insert Database Seeds)
        - setAdmin ( Set an Admin )
+       
+   * Allow Options
+       - setAdmin --admin=Adminname --admin=AdminMail --admin=AdminPassword
+       
+         > Rules = Name 5 Letters
+                   Email Valid-Email and Unique
+                   Password = Min. 8 Signs and 3 of 4 Rules 1 Low- and 1 Upper- Case / 1 Number / Special Chars  
 
     ```php
     php artisan make:acl argument

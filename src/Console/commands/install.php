@@ -3,7 +3,9 @@ namespace cyrixbiz\acl\Console\commands;
 
 use cyrixbiz\acl\Exceptions\Command\CommandArgumentNotExistsException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Validator as Validation;
 
 /**
  * Class AclCommand
@@ -14,7 +16,7 @@ class AclCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'make:acl {action?}';
+    protected $signature = 'make:acl {action?} {--admin=*}';
 
     /**
      * @var string
@@ -31,6 +33,8 @@ class AclCommand extends Command
      */
     public function __construct()
     {
+        $this->checkConnection();
+
         $this->user = config('auth.providers.users.model');
         $this->role = config('acl.model.roles');
         parent::__construct();
@@ -111,12 +115,18 @@ class AclCommand extends Command
      */
     public function setRoutes() : ?bool
     {
-        file_put_contents(
-            base_path('routes/web.php'),
-            file_get_contents(__DIR__.'../../stubs/routes.stub'),
-            FILE_APPEND
-        );
-        return $this->info(__('AclLang::commands.route'));
+        $routesContents = file_get_contents(base_path('routes/web.php'));
+        $stubsContents = file_get_contents(__DIR__.'../../stubs/routes.stub');
+        if(!strpos($routesContents, $stubsContents))
+        {
+            file_put_contents(
+                base_path('routes/web.php'),
+                $stubsContents,
+                FILE_APPEND
+            );
+            return $this->info(__('AclLang::commands.route'));
+        }
+        return $this->info(__('AclLang::commands.route_exists'));
     }
 
     /**
@@ -160,18 +170,58 @@ class AclCommand extends Command
      */
     public function setAdmin() : ?bool
     {
+
         $this->info(__('AclLang::commands.admin'));
         $admin = new $this->user;
         $role  = new $this->role;
-        $admin->name = $this->ask(__('AclLang::commands.name'));
-        $admin->email =  $this->ask(__('AclLang::commands.email'));
-        $password = $this->ask(__('AclLang::commands.password'));
+
+        $admin->name = array_key_exists(0, $this->option('admin')) ? $this->option('admin')[0] : $this->ask(__('AclLang::commands.name'));
+        $admin->email =  array_key_exists(0, $this->option('admin')) ? $this->option('admin')[1] : $this->ask(__('AclLang::commands.email'));
+        $password = array_key_exists(0, $this->option('admin')) ? $this->option('admin')[2] : $this->ask(__('AclLang::commands.password'));
         $admin->password = $password;
 
-        $validator = Validator::make(
+        $validator = $this->validateInput($admin->name, $admin->email, $password);
+
+        if ($validator->fails()) {
+            $this->info(__('AclLang::commands.admin_fail'));
+            foreach ($validator->errors()->all() as $error) {
+                $this->error($error);
+            }
+            return false;
+        }
+
+        $admin->save();
+        $admin->find($admin->id)->roles()->attach($role->whereName('Admin')->first()->id);
+        $this->info(__('AclLang::commands.admin_success'));
+        return true;
+    }
+
+    /**
+     * Check the Database Connection is active
+     * @return bool
+     */
+    protected function checkConnection() : bool
+    {
+        if(DB::connection()->getDatabaseName())
+        {
+            return true;
+        }
+        exit(__('AclLang::commands.connection'));
+    }
+
+    /**
+     * Validate the Adnin Input
+     * @param $name
+     * @param $email
+     * @param $password
+     * @return Validation
+     */
+    protected function validateInput($name, $email, $password) : Validation
+    {
+        return Validator::make(
             [
-                'name' => $admin->name,
-                'email' => $admin->email,
+                'name' => $name,
+                'email' => $email,
                 'password' => $password,
             ],
             [
@@ -189,20 +239,10 @@ class AclCommand extends Command
                 'password.regex' => __('AclLang::validation.password.regex'),
             ]
         );
-
-        if ($validator->fails()) {
-            $this->info(__('AclLang::commands.admin_fail'));
-            foreach ($validator->errors()->all() as $error) {
-                $this->error($error);
-            }
-            return false;
-        }
-
-        $admin->save();
-        return $admin->find($admin->id)->roles()->attach($role->whereName('Admin')->first()->id);
     }
 
     /**
+     * Start the Status Bar
      * @param int $max
      * @return bool|null
      */
