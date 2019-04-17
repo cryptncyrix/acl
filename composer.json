@@ -1,21 +1,22 @@
 {
     "name": "cyrixbiz/acl",
 	"description": "An Access Control List for Laravel without Gates",
+    "keywords": [
+        "auth",
+        "permissions",
+        "roles",
+        "security",
+        "acl",
+        "middleware"
+    ],
+    "license": "MIT",
     "authors": [
         {
             "name": "Christian Kupka",
             "email": "admin@cyrix.biz",
             "homepage": "http://www.cyrix.biz",
-            "role": "Developer",
-            "license": "MIT",
-            "keywords": [
-                "auth",
-                "permissions",
-                "roles",
-                "security",
-                "acl",
-                "middleware"
-            ]
+            "role": "Developer"
+
         }
     ],
     "minimum-stability": "dev",
