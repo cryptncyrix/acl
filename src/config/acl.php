@@ -30,7 +30,7 @@ return [
          * All Member in this Role don't have Rights
          *
          * This Group is a special Role
-         * He has zero Rights, He can't be deleted.
+         * and has zero Rights, This Group can't be deleted.
          * Users in this Role, lost all her Permissions
          * Default: 5 | Change this to your Role
          */
@@ -73,5 +73,4 @@ return [
         'roles'     => 'cyrixbiz\acl\Models\Role\Role',
         'resources' => 'cyrixbiz\acl\Models\Resource\Resource',
     ],
-
 ];

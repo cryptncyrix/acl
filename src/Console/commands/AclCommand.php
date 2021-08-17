@@ -104,7 +104,7 @@ class AclCommand extends Command
     public function setAuth() : ?int
     {
         if ($this->confirm(__('AclLang::commands.auth'))) {
-            return $this->call('make:auth');
+            return $this->call('ui bootstrap --auth');
         }
         return $this->info(__('AclLang::commands.auth_jump'));
     }
