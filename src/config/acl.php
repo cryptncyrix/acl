@@ -69,8 +69,12 @@ return [
      * Models
      */
 
+    /**
+     * Models
+     */
+
     'model' => [
-        'roles'     => 'cyrixbiz\acl\Models\Role\Role',
-        'resources' => 'cyrixbiz\acl\Models\Resource\Resource',
+        'roles'     => \cyrixbiz\acl\Models\Roles\Role::class,
+        'resources' => \cyrixbiz\acl\Models\Resources\Resource::class,
     ],
 ];

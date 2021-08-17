@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace cyrixbiz\acl\Models\Resource;
+namespace cyrixbiz\acl\Models\Resources;
 
 use Illuminate\Database\Eloquent\Model;
 

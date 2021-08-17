@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace cyrixbiz\acl\Models\Role;
+namespace cyrixbiz\acl\Models\Roles;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -10,7 +10,6 @@
             <input type="text" name="name" value="{{   $repository->name }}">
             <input type="email" name="email" value="{{   $repository->email }}">
             <input type="password" name="password" placeholder="{{__('AclLang::views.password_info')}}">
-            <input type="text" name="info" value="{{__('AclLang::views.description_info')}}">
             <input type="submit" name="submit" value="{{__('AclLang::views.update')}}">
         </form>
     </div>

@@ -27,13 +27,12 @@
                         <a class="btn btn-xs btn-warning" href="{{ route($action.'.show' , $value->id) }}"> <i class="fa fa-btn fa-edit"></i>{{__('AclLang::views.show')}}</a>
                     @endperm
                     @perm($action.'.destroy')
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_{{$value->id}}"><i class="fa fa-btn fa-trash"></i>{{__('AclLang::views.destroy')}}</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_{{$value->id}}"><i class="fa fa-btn fa-trash"></i>{{__('AclLang::views.destroy')}}</button>
                         @include('AclView::user._modals')
                     @endperm
                 </td>
                 @if(isset($link) && count($link) == 2)
                     <td>
-
                         @perms(['acl.getPermissions' , 'role.user'])
                             <a class="btn btn-xs btn-success" href="{{ route('acl.getPermissions', [$link[0], $action, $value->id]) }}"><i class="fa fa-btn fa-chain"></i>
                                 {{__('AclLang::views.assign_to', ['assign' => ucfirst($link[0])])}}</a>

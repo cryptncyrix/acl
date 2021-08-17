@@ -6,11 +6,12 @@
                 <p class="heading">{{__('AclLang::views.sure')}}</p>
             </div>
             <div class="modal-body">
-                <h3 class="text-danger"><i class="fa fa-trash "></i> {{__('AclLang::views.destroy')}}: {{$value->name}}</h3>
+                <h3 class="text-danger"><i class="fa fa-trash "></i> {{__('AclLang::views.users') . ' ' . __('AclLang::views.destroy')}}:</h3>
+                <p>{{$value->name}}</p>
             </div>
             <div class="modal-footer flex-center">
                 <a href="{{ route($action.'.destroy' , $value->id) }}" class="btn  btn-danger">{{__('AclLang::views.destroy')}}</a>
-                <a class="btn  btn-dark" data-dismiss="modal">{{__('AclLang::views.cancel')}}</a>
+                <a class="btn  btn-dark" data-bs-dismiss="modal">{{__('AclLang::views.cancel')}}</a>
             </div>
         </div>
     </div>
