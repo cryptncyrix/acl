@@ -92,6 +92,13 @@
     }
     .modal-header .heading
     {
-        color: red;
+        padding: 2.5em;
+        font-size: 1.5em;
+        color: #F93154;
+    }
+    .modal-body p
+    {
+        padding: 1em 0;
+        font-size: 1.25em;
     }
 </style>
