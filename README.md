@@ -22,7 +22,7 @@
   ];
     ```
 
-*  Got to your User Model - Default Value: App\User.php and set this
+*  Got to your User Model - Default Value: App\Models\User.php and set this
     
     ```php
     //after namespace .....
@@ -107,6 +107,10 @@
     * Set a Secure User
         ###### 'superAdmin' => 1 - UserID
         > Description: This User has Full Rights and can't be deleted
+		
+    * Set a newMemberRole
+        ###### 'newMemberRole' => 3 - UserID
+        > Description: Members receive this Role after an active registration
         
     * Set a Blocked Role
         ###### 'blockedRole' => 5 - RoleID
@@ -161,5 +165,5 @@ Route::middleware(['web' , 'acl'])
 
 ###### Requirements
 
-- <a href="http://laravel.com/docs/5.7">Laravel 5.7</a>
-- <a href="https://laravel.com/docs/5.7/authentication">Auth</a>
+- <a href="https://laravel.com/docs/8.x/">Laravel 8.x</a>
+- <a href="https://laravel.com/docs/8.x/authentication">Auth</a>

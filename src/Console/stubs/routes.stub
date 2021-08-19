@@ -1,5 +1,4 @@
 
-
 /*
  * ACL Routes
  */
@@ -53,7 +52,6 @@ Route::middleware(['web' , 'acl'])->group(function () {
     /*
      * Helper
      */
-
     Route::get('acl/setRoutes', function (\cyrixbiz\acl\Repositories\Resource\ResourceRepository $repository) {
         $class = new \cyrixbiz\acl\Helper\Route\AclRouteHelper($repository);
         $class->insertResources();

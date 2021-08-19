@@ -31,7 +31,7 @@
                     </a>
                 @endperm
                 @perm($action.'.destroy')
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_{{$value->id}}"><i class="fa fa-btn fa-trash"></i>{{__('AclLang::views.destroy')}}</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_{{$value->id}}"><i class="fa fa-btn fa-trash"></i>{{__('AclLang::views.destroy')}}</button>
                     @include('AclView::roleresource._modals')
                 @endperm
                 </td>

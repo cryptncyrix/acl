@@ -48,9 +48,11 @@
                         <li><a href="{{ route('acl.setRoutes') }}" class="text-white">{{ __('AclLang::views.set_routes') }}</a></li>
                     </ul>
                     @endperm
+                    @perm('logout')
                     <h4 class="text-white">{{ __('AclLang::views.logout') }}</h4>
                     <a class="text-white" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> Logout </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" >{{ csrf_field() }}</form>
+                    @endperm
                 </div>
             </div>
         </div>

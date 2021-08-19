@@ -31,7 +31,12 @@ class UserController
     public function __construct(UserRepository $repository)
     {
         $this->repository = $repository;
-        $this->action = strtolower(substr(config('auth.providers.users.model'), strripos(config('auth.providers.users.model'), '\\') + 1));
+        $this->action =
+            strtolower(
+                substr(config('auth.providers.users.model'),
+                    strripos(config('auth.providers.users.model'), '\\') + 1
+                )
+            );
     }
 
 
@@ -44,7 +49,11 @@ class UserController
      */
     public function index() : View
     {
-        return view('AclView::user\Overview', ['repository' => $this->repository->all(), 'action' => $this->action, 'link' => ['role', 'resource']]);
+        return view('AclView::user\Overview',
+            ['repository' => $this->repository->all(), 'action' => $this->action, 'link' =>
+                ['role', 'resource']
+            ]
+        );
     }
 
     /**
@@ -54,7 +63,9 @@ class UserController
 
     public function create() : View
     {
-        return view('AclView::user\Create', ['action' => $this->action]);
+        return view('AclView::user\Create',
+            ['action' => $this->action]
+        );
     }
 
     /**
@@ -65,8 +76,27 @@ class UserController
 
     public function store(UserRequest $request) : RedirectResponse
     {
-        $this->repository->create($request->validated());
-        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success', ['user' => $request->validated()['name']]));
+        $oUser = $this->repository->create($request->validated());
+        if($request->active == 1)
+        {
+            /*
+             * User is active, Low Member
+             */
+            $oUser->roles()->attach(config('acl.acl.newMemberRole'));
+        }
+        else
+        {
+            /*
+             * User is inactive, Blocked Member
+             */
+            $oUser->roles()->attach(config('acl.acl.blockedRole'));
+        }
+
+        return redirect()
+            ->route('user.index')
+            ->with('status', __('AclLang::views.users_success',
+                ['user' => $request->validated()['name']]
+            ));
     }
 
     /**
@@ -77,7 +107,10 @@ class UserController
 
     public function show(int $id) : View
     {
-        return view('AclView::user\Show', ['repository' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::user\Show',
+            ['repository' => $this->repository->find($id),
+                'action' => $this->action
+            ]);
     }
 
     /**
@@ -88,7 +121,10 @@ class UserController
 
     public function edit(int $id) : View
     {
-        return view('AclView::user\Edit', ['repository' => $this->repository->find($id), 'action' => $this->action]);
+        return view('AclView::user\Edit',
+            ['repository' => $this->repository->find($id),
+                'action' => $this->action
+            ]);
     }
 
     /**
@@ -100,7 +136,11 @@ class UserController
     public function update(UserUpdateRequest $request) : RedirectResponse
     {
         $this->repository->update($request->validated(), (int) $request->validated()['id']);
-        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success_updated', ['user' => $request->validated()['name']]));
+        return redirect()
+            ->route('user.index')
+            ->with('status', __('AclLang::views.users_success_updated',
+                ['user' => $request->validated()['name']]
+            ));
     }
 
     /**
@@ -113,9 +153,15 @@ class UserController
     {
         if($id == config('acl.acl.superAdmin'))
         {
-            return redirect()->route('user.index')->with('error', __('AclLang::exception.superAdmin'));
+            return redirect()
+                ->route('user.index')
+                ->with('error', __('AclLang::exception.superAdmin'));
         }
         $this->repository->delete($id);
-        return redirect()->route('user.index')->with('status', __('AclLang::views.users_success_destroyed', ['user' => $id]));
+        return redirect()
+            ->route('user.index')
+            ->with('status', __('AclLang::views.users_success_destroyed',
+                ['user' => $id]
+            ));
     }
 }

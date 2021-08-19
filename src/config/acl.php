@@ -27,7 +27,15 @@ return [
         'superAdmin' => 1,
 
         /**
-         * All Member in this Role don't have Rights
+         * This Role is for all new active Members
+         *
+         * Members receive this Role after an active registration
+         */
+
+        'newMemberRole' => 3,
+
+        /**
+         * All Members in this Role have no Rights
          *
          * This Group is a special Role
          * and has zero Rights, This Group can't be deleted.
@@ -64,10 +72,6 @@ return [
 
         'time' => 60
     ],
-
-    /**
-     * Models
-     */
 
     /**
      * Models

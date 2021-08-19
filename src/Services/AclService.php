@@ -32,7 +32,7 @@ class AclService {
     protected $superAdmin = false;
 
     /**
-     * superAdmin
+     * blockedRole
      * @var object
      */
     protected $blockedRole = false;
@@ -52,11 +52,15 @@ class AclService {
     {
         $this->resource = $resource;
         $this->auth = $auth;
-        $this->getAllUserPermissions();
-        $this->getAllTrueResources();
+        $this->checkAuthGuest();
+        #$this->getAllUserPermissions();
+        #$this->getAllTrueResources();
+
     }
 
     /**
+     * has User the Access
+     *
      * @param $item
      * @return bool
      */
@@ -66,7 +70,7 @@ class AclService {
         if($this->superAdmin === false)
         {
             // Blocked False, then Check resources
-            if($this->blockedRole == false)
+            if($this->blockedRole === false)
             {
                 if(is_array($item))
                 {
@@ -81,22 +85,22 @@ class AclService {
         return true;
     }
 
-
     /**
      * Get all User Auth Data
+     *
+     * @return AclService
      */
     public function getAllUserPermissions() : self
     {
-        if(!$this->auth->guest())
-        {
+        //if(!$this->auth->guest())
+        //{
             $this->user = Cache::remember('user', Carbon::now()->addSeconds(config('acl.cache.time')), function ()
             {
                 return $this->auth->user()->load('roles', 'roles.resources', 'resources');
             });
-
             $this->superAdmin = $this->setSuperAdmin();
             $this->blockedRole = $this->setBlockedRole($this->user->roles);
-        }
+        //}
         return $this;
     }
 
@@ -118,14 +122,33 @@ class AclService {
     }
 
     /**
+     * Check User is logged in
+     * get all Permissions
+     *
+     * @return AclService
+     */
+
+    public function checkAuthGuest() : self
+    {
+        if(!$this->auth->guest())
+        {
+            $this->getAllUserPermissions();
+            $this->getAllTrueResources();
+        }
+        return $this;
+    }
+
+    /**
      * Check the Resource of Rights
+     *
      * @param string $toCheckedString
+     * @param bool $defaultAccess | null
      * @return boolean
      */
     public function checkUserPermissions(string $toCheckedString, bool $defaultAccess = null) : bool
     {
-        if(!$this->auth->guest())
-        {
+        //if(!$this->auth->guest())
+        //{
             if( $this->getUserAccess($this->user->resources,  $toCheckedString)   )
             {
                 // User - Resource
@@ -143,11 +166,13 @@ class AclService {
                 // Default Access Resource
                 return true;
             }
-        }
-       return false;
+        //}
+        return false;
     }
 
     /**
+     * Check multiple resource
+     *
      * @param array $toCheckedArray
      * @return bool
      */
@@ -164,12 +189,18 @@ class AclService {
     }
 
     /**
+     * Check one resource
+     *
      * @param string $toCheckedString
      * @return bool
      */
     protected function checkString(string $toCheckedString) : bool
     {
-        return (in_array($toCheckedString, $this->resources));
+        return
+            (in_array(
+                $toCheckedString,
+                $this->resources
+            ));
     }
 
     /**
@@ -184,7 +215,7 @@ class AclService {
     }
 
     /**
-     * Check - is the ressource set ;)
+     * Check - has User the Access
      *
      * @param  $objectResources
      * @param  $stringResource
@@ -193,11 +224,15 @@ class AclService {
 
     protected function getUserAccess(Collection $objectResources, string $stringResource) : bool
     {
-        return (in_array($stringResource, $objectResources->pluck('name')->all()));
+        return
+            (in_array(
+                $stringResource,
+                $objectResources->pluck('name')->all()
+            ));
     }
 
     /**
-     * Check - has the Role the Resource ;)
+     * Check - has Role the Resource
      *
      * @param  $objectRole
      * @param  $stringResource
@@ -210,7 +245,6 @@ class AclService {
             {
                 return true;
             } else {
-
                 $access = $this->getUserAccess($value->resources, $stringResource);
                 if($access == false)
                 {
@@ -223,24 +257,29 @@ class AclService {
     }
 
     /**
+     * Is User blocked
+     *
      * @param Collection $objectRole
      * @return bool
      */
     public function setBlockedRole(Collection $objectRole) : bool
     {
-        return (in_array(config('acl.acl.blockedRole'), $objectRole->pluck('id')->all()));
+        return
+            (in_array(
+                config('acl.acl.blockedRole'),
+                $objectRole->pluck('id')->all()
+            ));
     }
 
     /**
-     * setSuperAdmin
+     * Is User a SuperAdmin
+     *
      * @return bool
      */
     protected function setSuperAdmin() : bool
     {
-        if(isset($this->user->id) && config('acl.acl.superAdmin') == $this->user->id)
-        {
-           return true;
-        }
-        return false;
+        return
+            (isset($this->user->id) &&
+            config('acl.acl.superAdmin') == $this->user->id);
     }
 }
