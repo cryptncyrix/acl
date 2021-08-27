@@ -49,7 +49,7 @@ class AclServiceProvider extends ServiceProvider {
          * Publish the View-Files
          */
         $this->publishes([
-            __DIR__ . '/resources/views' => resource_path('views/vendor/AclView'),
+            __DIR__ . '/resources/views/acl' => resource_path('views/vendor/AclView'),
         ]);
 
         /*
